@@ -1,0 +1,15 @@
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/bin/Debug/net8.0/OnlineMarket.OrleansImpl.deps.json
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/bin/Debug/net8.0/OnlineMarket.OrleansImpl.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/bin/Debug/net8.0/OnlineMarket.OrleansImpl.pdb
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/bin/Debug/net8.0/OnlineMarket.Core.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/bin/Debug/net8.0/OnlineMarket.Core.pdb
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.csproj.AssemblyReference.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.GeneratedMSBuildEditorConfig.editorconfig
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.AssemblyInfoInputs.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.AssemblyInfo.cs
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.csproj.CoreCompileInputs.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMa.5B4F2B56.Up2Date
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/refint/OnlineMarket.OrleansImpl.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.pdb
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/ref/OnlineMarket.OrleansImpl.dll

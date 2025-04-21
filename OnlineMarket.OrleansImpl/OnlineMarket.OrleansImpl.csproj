@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="7.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Sdk" Version="7.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Serialization.NewtonsoftJson" Version="7.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Persistence.AdoNet" Version="7.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Transactions" Version="7.2.1" />
+    <PackageReference Include="Microsoft.Orleans.Streaming" Version="7.2.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.7.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OnlineMarket.Core\OnlineMarket.Core.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "u/8YR48U7sE=",
+  "success": true,
+  "projectFilePath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj",
+  "expectedPackageFiles": [
+    "/Users/qiming/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.4/microsoft.extensions.dependencyinjection.abstractions.9.0.4.nupkg.sha512",
+    "/Users/qiming/.nuget/packages/microsoft.extensions.logging.abstractions/9.0.4/microsoft.extensions.logging.abstractions.9.0.4.nupkg.sha512",
+    "/Users/qiming/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/qiming/.nuget/packages/system.diagnostics.diagnosticsource/9.0.4/system.diagnostics.diagnosticsource.9.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,40 @@
+﻿using OnlineMarket.Core.Common.Entities;
+using OnlineMarket.Core.Common.Requests;
+
+namespace OnlineMarket.Core.Common.Events;
+/*
+    * "An invoice acts as a request for payment for the delivery of goods or services."
+    * Source: https://invoice.2go.com/learn/invoices/invoice-vs-purchase-order/
+    * An invoice data structure contains all necessary info for the payment 
+    * actor to process a payment
+    */
+public class InvoiceIssued
+{
+    public CustomerCheckout customer { get; set; }
+
+    public int orderId { get; set; }
+
+    public string invoiceNumber { get; set; }
+
+    public DateTime issueDate { get; set; }
+
+    public float totalInvoice { get; set; }
+
+    public List<OrderItem> items { get; set; }
+
+    public string instanceId { get; set; }
+
+    public InvoiceIssued(){}
+
+    public InvoiceIssued(CustomerCheckout customer, int orderId, string invoiceNumber, DateTime issueDate, float totalInvoice, List<OrderItem> items, string instanceId)
+    {
+        this.customer = customer;
+        this.orderId = orderId;
+        this.invoiceNumber = invoiceNumber;
+        this.issueDate = issueDate;
+        this.totalInvoice = totalInvoice;
+        this.items = items;
+        this.instanceId = instanceId;
+    }
+}
+

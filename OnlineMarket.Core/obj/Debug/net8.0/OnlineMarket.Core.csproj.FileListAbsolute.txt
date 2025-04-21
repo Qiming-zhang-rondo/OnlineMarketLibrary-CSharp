@@ -1,0 +1,12 @@
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/bin/Debug/net8.0/OnlineMarket.Core.deps.json
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/bin/Debug/net8.0/OnlineMarket.Core.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/bin/Debug/net8.0/OnlineMarket.Core.pdb
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.csproj.AssemblyReference.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.GeneratedMSBuildEditorConfig.editorconfig
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.AssemblyInfoInputs.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.AssemblyInfo.cs
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.csproj.CoreCompileInputs.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/refint/OnlineMarket.Core.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.pdb
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/ref/OnlineMarket.Core.dll

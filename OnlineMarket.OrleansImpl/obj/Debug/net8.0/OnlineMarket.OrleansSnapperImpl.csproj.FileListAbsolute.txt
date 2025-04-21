@@ -1,0 +1,5 @@
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansSnapperImpl.csproj.AssemblyReference.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansSnapperImpl.GeneratedMSBuildEditorConfig.editorconfig
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansSnapperImpl.AssemblyInfoInputs.cache
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansSnapperImpl.AssemblyInfo.cs
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansSnapperImpl.csproj.CoreCompileInputs.cache
