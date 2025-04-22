@@ -13,3 +13,4 @@
 /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/refint/OnlineMarket.OrleansImpl.dll
 /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.pdb
 /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/ref/OnlineMarket.OrleansImpl.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/Debug/net8.0/OnlineMarket.OrleansImpl.sourcelink.json

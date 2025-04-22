@@ -143,6 +143,10 @@
               "target": "Package",
               "version": "[7.2.1, )"
             },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[7.0.5, )"
+            },
             "StackExchange.Redis": {
               "target": "Package",
               "version": "[2.7.17, )"

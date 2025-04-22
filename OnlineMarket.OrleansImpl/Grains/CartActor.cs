@@ -13,6 +13,7 @@ using OnlineMarket.OrleansImpl.Infra;
 using Orleans;
 using Orleans.Runtime;
 using OnlineMarket.OrleansImpl.Infra.Adapter;
+using OnlineMarket.OrleansImpl.Tests.Infra.Mocks;
 
 namespace OnlineMarket.OrleansImpl.Grains;
 
@@ -47,6 +48,7 @@ public class CartActor : Grain, ICartActor
         cartService = new CartServiceCore(
             customerId,
             logger,
+            // new FakeOrderActorAdapter(),
             new OrderActorAdapter(customerId,GrainFactory),
             async () => await cartState.WriteStateAsync(),
             trackHistory: false

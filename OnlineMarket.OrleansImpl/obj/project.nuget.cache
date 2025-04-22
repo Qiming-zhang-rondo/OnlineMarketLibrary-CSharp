@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "67utAv4G8NA=",
+  "dgSpecHash": "sfOK7dxQpK4=",
   "success": true,
   "projectFilePath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/OnlineMarket.OrleansImpl.csproj",
   "expectedPackageFiles": [
@@ -47,6 +47,7 @@
     "/Users/qiming/.nuget/packages/microsoft.orleans.streaming/7.2.1/microsoft.orleans.streaming.7.2.1.nupkg.sha512",
     "/Users/qiming/.nuget/packages/microsoft.orleans.transactions/7.2.1/microsoft.orleans.transactions.7.2.1.nupkg.sha512",
     "/Users/qiming/.nuget/packages/newtonsoft.json/13.0.3/newtonsoft.json.13.0.3.nupkg.sha512",
+    "/Users/qiming/.nuget/packages/npgsql/7.0.6/npgsql.7.0.6.nupkg.sha512",
     "/Users/qiming/.nuget/packages/pipelines.sockets.unofficial/2.2.8/pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "/Users/qiming/.nuget/packages/stackexchange.redis/2.7.17/stackexchange.redis.2.7.17.nupkg.sha512",
     "/Users/qiming/.nuget/packages/system.diagnostics.diagnosticsource/9.0.4/system.diagnostics.diagnosticsource.9.0.4.nupkg.sha512",
@@ -57,5 +58,26 @@
     "/Users/qiming/.nuget/packages/system.text.encodings.web/7.0.0/system.text.encodings.web.7.0.0.nupkg.sha512",
     "/Users/qiming/.nuget/packages/system.text.json/7.0.0/system.text.json.7.0.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "OnlineMarket.OrleansImpl depends on Npgsql (>= 7.0.5) but Npgsql 7.0.5 was not found. An approximate best match of Npgsql 7.0.6 was resolved.",
+      "libraryId": "Npgsql",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Npgsql' 7.0.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-x9vc-6hfv-hg8c",
+      "libraryId": "Npgsql",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OnlineMarket.OrleansImpl")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+32a8dcd6358aabcda6138d9f2573d3665ca1c017")]
 [assembly: System.Reflection.AssemblyProductAttribute("OnlineMarket.OrleansImpl")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OnlineMarket.OrleansImpl")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
