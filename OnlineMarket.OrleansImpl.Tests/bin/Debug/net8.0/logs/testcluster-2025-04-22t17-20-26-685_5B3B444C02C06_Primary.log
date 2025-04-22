@@ -1,0 +1,14 @@
+﻿[2025-04-22 17:20:26.958 GMT 13	Warning	100405	Orleans.Runtime.Silo]	Note: Silo not running with ServerGC turned on - recommend checking app config : <configuration>-<runtime>-<gcServer enabled="true">	
+[2025-04-22 17:20:26.958 GMT 13	Warning	100405	Orleans.Runtime.Silo]	Note: ServerGC only kicks in on multi-core systems (settings enabling ServerGC have no effect on single-core machines).	
+[2025-04-22 17:20:27.191 GMT 5	Error	0	OnlineMarket.Core.Services.CartServiceCore]	!!!!!!!!!! Checkout exception caught in cart ID 2:    at Orleans.GrainInterfaceTypeToGrainTypeResolver.GetGrainType(GrainInterfaceType interfaceType) in /_/src/Orleans.Core/Core/GrainInterfaceTypeToGrainTypeResolver.cs:line 102
+   at Orleans.GrainFactory.GetGrain(Type interfaceType, IdSpan grainKey, String grainClassNamePrefix) in /_/src/Orleans.Core/Core/GrainFactory.cs:line 214
+   at Orleans.GrainFactory.GetGrain[TGrainInterface](Int64 primaryKey, String grainClassNamePrefix) in /_/src/Orleans.Core/Core/GrainFactory.cs:line 52
+   at OnlineMarket.OrleansImpl.Infra.Adapter.OrderActorAdapter.GetOrderActor() in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Infra/Adapter/OrderActorAdapter.cs:line 22
+   at OnlineMarket.OrleansImpl.Infra.Adapter.OrderActorAdapter.Checkout(ReserveStock reserveStock) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Infra/Adapter/OrderActorAdapter.cs:line 27
+   at OnlineMarket.Core.Services.CartServiceCore.NotifyCheckout(CustomerCheckout customerCheckout) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/Services/CartServiceCore.cs:line 65 - Orleans.Core -  - System.Collections.ListDictionaryInternal	
+[2025-04-22 17:20:27.200 GMT 5	Error	0	OnlineMarket.Core.Services.CartServiceCore]	!!!!!!!!!! Checkout exception caught in cart ID 4:    at Orleans.GrainInterfaceTypeToGrainTypeResolver.GetGrainType(GrainInterfaceType interfaceType) in /_/src/Orleans.Core/Core/GrainInterfaceTypeToGrainTypeResolver.cs:line 102
+   at Orleans.GrainFactory.GetGrain(Type interfaceType, IdSpan grainKey, String grainClassNamePrefix) in /_/src/Orleans.Core/Core/GrainFactory.cs:line 214
+   at Orleans.GrainFactory.GetGrain[TGrainInterface](Int64 primaryKey, String grainClassNamePrefix) in /_/src/Orleans.Core/Core/GrainFactory.cs:line 52
+   at OnlineMarket.OrleansImpl.Infra.Adapter.OrderActorAdapter.GetOrderActor() in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Infra/Adapter/OrderActorAdapter.cs:line 22
+   at OnlineMarket.OrleansImpl.Infra.Adapter.OrderActorAdapter.Checkout(ReserveStock reserveStock) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Infra/Adapter/OrderActorAdapter.cs:line 27
+   at OnlineMarket.Core.Services.CartServiceCore.NotifyCheckout(CustomerCheckout customerCheckout) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/Services/CartServiceCore.cs:line 65 - Orleans.Core -  - System.Collections.ListDictionaryInternal	

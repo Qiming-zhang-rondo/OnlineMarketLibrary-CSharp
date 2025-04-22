@@ -10,3 +10,4 @@
 /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/refint/OnlineMarket.Core.dll
 /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.pdb
 /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/ref/OnlineMarket.Core.dll
+/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/Debug/net8.0/OnlineMarket.Core.sourcelink.json

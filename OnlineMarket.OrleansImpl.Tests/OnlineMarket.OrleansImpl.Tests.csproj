@@ -22,7 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OnlineMarket.Core\OnlineMarket.Core.csproj" />
-    <ProjectReference Include="..\OnlineMarket.OrleansSnapperImpl\OnlineMarket.OrleansSnapperImpl.csproj" />
+    <ProjectReference Include="..\OnlineMarket.OrleansImpl\OnlineMarket.OrleansImpl.csproj" />
+    <PackageReference Include="Microsoft.Orleans.TestingHost" Version="7.2.1" />
   </ItemGroup>
 
 </Project>

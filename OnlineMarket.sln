@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineMarket.OrleansImpl", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineMarket.OrleansImpl.Tests", "OnlineMarket.OrleansImpl.Tests\OnlineMarket.OrleansImpl.Tests.csproj", "{CAAD98A9-6917-479C-AF92-73233AEBF0E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silo", "Silo\Silo.csproj", "{EDDB19BF-9D4A-4324-AF73-926336111981}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{CAAD98A9-6917-479C-AF92-73233AEBF0E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CAAD98A9-6917-479C-AF92-73233AEBF0E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CAAD98A9-6917-479C-AF92-73233AEBF0E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDDB19BF-9D4A-4324-AF73-926336111981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDDB19BF-9D4A-4324-AF73-926336111981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDDB19BF-9D4A-4324-AF73-926336111981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDDB19BF-9D4A-4324-AF73-926336111981}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
