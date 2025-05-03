@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OnlineMarket.Core.Common.Config;
 using OnlineMarket.Core.Interfaces;
 using OnlineMarket.OrleansImpl.Infra;
 using OnlineMarket.OrleansImpl.Infra.Adapter;
@@ -28,19 +27,8 @@ public class NonTransactionalClusterFixture : IDisposable
                 logging.SetMinimumLevel(LogLevel.Warning);
             });
             
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.Test.json", optional:false);
-            var conf = builder.Build();
-            var cfg = conf.Get< AppConfig >();  
-            
-            hostBuilder.Services
-                .AddDbContextFactory<SellerDbContext>(opt =>
-                    opt.UseNpgsql(cfg.AdoNetConnectionString)
-                        .UseSnakeCaseNamingConvention());   // Postgres 常用下划线风格
-            
-            
-            // hostBuilder.Services.AddDbContextFactory<SellerDbContext>(opt =>
-            //     opt.UseInMemoryDatabase("TestSellerView"));
+            hostBuilder.Services.AddDbContextFactory<SellerDbContext>(opt =>
+                opt.UseInMemoryDatabase("seller_view_test"));
 
             if (ConfigHelper.NonTransactionalDefaultAppConfig.StreamReplication)
             {
@@ -48,10 +36,7 @@ public class NonTransactionalClusterFixture : IDisposable
                             .AddMemoryGrainStorage(Constants.DefaultStreamStorage);
             }
 
-            hostBuilder.Services.AddSerializer(ser => { ser.AddNewtonsoftJsonSerializer(isSupported: type => 
-                    type.Namespace.StartsWith("OnlineMarket.Core.Common") || 
-                    type.Namespace.StartsWith("OnlineMarket.OrleansImpl") ||
-                    type.Namespace.StartsWith("Npgsql")); })
+            hostBuilder.Services.AddSerializer(ser => { ser.AddNewtonsoftJsonSerializer(isSupported: type => type.Namespace.StartsWith("OnlineMarket.Core.Common") || type.Namespace.StartsWith("OnlineMarket.OrleansImpl")); })
              .AddSingleton(ConfigHelper.NonTransactionalDefaultAppConfig);
 
             // the non transactional grains need grain storage for persistent state on constructor
@@ -90,13 +75,6 @@ public class NonTransactionalClusterFixture : IDisposable
 
     public NonTransactionalClusterFixture()
     {
-        var cfg = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.Test.json", optional: false)
-            .Build()
-            .Get<AppConfig>();
-
-        ConfigHelper.NonTransactionalDefaultAppConfig = cfg;
-        
         var builder = new TestClusterBuilder(1);
         builder.AddSiloBuilderConfigurator<SiloConfigurator>();
         builder.AddClientBuilderConfigurator<ClientConfigurator>();
