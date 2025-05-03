@@ -1,0 +1,20 @@
+# ./docker-compose.yml
+version: "3.9"
+
+services:
+
+  pg:
+    image: postgres:15               # 任何 ≥13 版本都行
+    container_name: om_test_pg
+    restart: unless-stopped
+    ports:
+      - "5432:5432"                  # 暴露到宿主机，测试直接连 localhost:5432
+    environment:
+      POSTGRES_DB:       onlinemarket
+      POSTGRES_USER:     devuser
+      POSTGRES_PASSWORD: devpass
+    healthcheck:                     # 等 DB ready 再跑测试
+      test: ["CMD", "pg_isready", "-U", "devuser"]
+      interval: 3s
+      timeout: 5s
+      retries: 10

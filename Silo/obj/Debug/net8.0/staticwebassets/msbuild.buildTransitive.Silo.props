@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="../buildMultiTargeting/Silo.props" />
+  <Import Project="..\buildMultiTargeting\Silo.props" />
 </Project>

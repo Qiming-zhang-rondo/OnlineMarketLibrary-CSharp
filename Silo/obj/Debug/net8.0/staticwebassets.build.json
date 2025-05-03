@@ -1,11 +1,12 @@
 {
   "Version": 1,
-  "Hash": "jUsIOoO9cm+jbFw8JdQLNJF90Pu7S+bhtaXm60/Dv0Q=",
+  "Hash": "PmzlN/6GTAG3kAtxlyEQ3PBlfSlwmUqQyl/fdFyJVqM=",
   "Source": "Silo",
   "BasePath": "_content/Silo",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
   "DiscoveryPatterns": [],
-  "Assets": []
+  "Assets": [],
+  "Endpoints": []
 }

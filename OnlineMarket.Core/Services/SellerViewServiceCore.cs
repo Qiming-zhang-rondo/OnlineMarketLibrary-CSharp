@@ -1,0 +1,211 @@
+﻿// ──────────────────────────────────────────────────────────────
+// OnlineMarket.Core.Services/SellerViewServiceCore.cs
+// ──────────────────────────────────────────────────────────────
+#nullable enable
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using OnlineMarket.Core.Common.Entities;
+using OnlineMarket.Core.Common.Events;
+using OnlineMarket.Core.Common.Integration;
+using OnlineMarket.Core.Interfaces;
+using OnlineMarket.Core.Ports;
+
+namespace OnlineMarket.Core.Services;
+
+/// <summary>
+/// “卖家视图”核心业务：  
+/// 1. 把 <see cref="OrderEntry"/> 写入 Postgres；  
+/// 2. 增量维护 Seller‑Level 物化视图；  
+/// 3. 对外提供 <see cref="SellerDashboard"/> 查询。  
+/// <para>⚠️ 纯业务层：绝不出现 Orleans / EF / Dapper 等实现细节！</para>
+/// </summary>
+public sealed class SellerViewServiceCore : ISellerViewService
+{
+    private readonly int _sellerId;
+
+    // Ports
+    private readonly IOrderEntryViewRepository _repo;
+    private readonly IMaterializedViewRefresher _viewRefresher;
+    private readonly IAuditLog _audit;
+    private readonly IClock _clock;
+    private readonly ILogger _log;
+
+    private readonly bool _logRecords;
+
+    // 状态缓存（仅在本 Grain 生命周期内有效）
+    private Seller? _seller;
+    /// <summary>key = (customerId, orderId) → entryId 列表</summary>
+    private IDictionary<(int,int), List<int>> _cache =
+        new Dictionary<(int,int), List<int>>();
+
+    private SellerDashboard _cachedDashboard =
+        new(new OrderSellerView(), new List<OrderEntry>());
+
+    private volatile bool _dirty = true;
+
+    /*──────────────────── ctor ────────────────────*/
+    public SellerViewServiceCore(
+        int sellerId,
+        IOrderEntryViewRepository repo,
+        IMaterializedViewRefresher refresher,
+        IAuditLog audit,
+        IClock clock,
+        ILogger log,
+        bool logRecords)
+    {
+        _sellerId      = sellerId;
+        _repo          = repo  ?? throw new ArgumentNullException(nameof(repo));
+        _viewRefresher = refresher ?? throw new ArgumentNullException(nameof(refresher));
+        _audit         = audit ?? throw new ArgumentNullException(nameof(audit));
+        _clock         = clock ?? throw new ArgumentNullException(nameof(clock));
+        _log           = log   ?? throw new ArgumentNullException(nameof(log));
+        _logRecords    = logRecords;
+    }
+
+    /*──────────────── ISellerViewService ────────────────*/
+
+    public Task SetSeller(Seller seller)
+    {
+        _seller = seller ?? throw new ArgumentNullException(nameof(seller));
+        // Seller 仅保存在 OrleansState（Impl 层负责），此处无需落库
+        return Task.CompletedTask;
+    }
+    public Task<Seller?> GetSeller() => Task.FromResult(_seller);
+
+    /*―――――――― Invoice ――――――――*/
+    public async Task ProcessNewInvoice(InvoiceIssued inv)
+    {
+        var list = inv.items.Select(i => new OrderEntry
+        {
+            // 基本索引字段
+            customer_id  = inv.customer.CustomerId,
+            order_id     = i.order_id,
+            seller_id    = i.seller_id,
+
+            natural_key  = $"{inv.customer.CustomerId}|{i.order_id}",
+
+            // 商品 / 金额
+            product_id   = i.product_id,
+            product_name = i.product_name,
+            quantity     = i.quantity,
+            unit_price   = i.unit_price,
+            total_items  = i.total_items,
+            total_amount = i.total_amount,
+            freight_value= i.freight_value,
+            total_invoice= i.total_amount + i.freight_value,
+            total_incentive = i.voucher,
+
+            // 初始状态
+            order_status   = OrderStatus.INVOICED,
+            delivery_status= PackageStatus.created
+        }).ToList();
+
+        await _repo.AddEntriesAsync(list);
+
+        // 记录到本地 cache：供后续 Shipment/Delivery 快速定位
+        _cache[(inv.customer.CustomerId, inv.orderId)] =
+            list.Select(e => e.id).ToList();
+        await _repo.SaveCacheAsync(_cache);
+
+        _dirty = true;                                  // 仪表盘需要刷新
+    }
+
+    /*―――――――― 支付结果（在视图里不关心）――――――――*/
+    public Task ProcessPaymentConfirmed(PaymentConfirmed _) => Task.CompletedTask;
+    public Task ProcessPaymentFailed   (PaymentFailed   _)  => Task.CompletedTask;
+
+    /*―――――――― Shipment 状态 ――――――――*/
+    public async Task ProcessShipmentNotification(ShipmentNotification sn)
+    {
+        var key = (sn.CustomerId, sn.OrderId);
+
+        if (!_cache.TryGetValue(key, out var ids))
+        {
+            _log.LogWarning("SellerView[{Sid}] – entries not cached for order {Key}",
+                            _sellerId, key);
+            return;
+        }
+
+        // 1) finished：删除 + 审计
+        if (sn.Status == ShipmentStatus.concluded)
+        {
+            await _repo.UpdateEntriesAsync(
+                ids.Select(id => new OrderEntry { id = id }));  // 删除
+
+            if (_logRecords)
+            {
+                var json = JsonSerializer.Serialize(ids);
+                await _audit.WriteAsync("SellerView",
+                    $"{key.CustomerId}-{key.OrderId}", json);
+            }
+
+            _cache.Remove(key);
+            await _repo.SaveCacheAsync(_cache);
+        }
+        // 2) approved → READY_FOR_SHIPMENT
+        else if (sn.Status == ShipmentStatus.approved)
+        {
+            var upd = ids.Select(id => new OrderEntry
+            {
+                id              = id,
+                order_status    = OrderStatus.READY_FOR_SHIPMENT,
+                shipment_date   = sn.EventDate,
+                delivery_status = PackageStatus.ready_to_ship
+            });
+            await _repo.UpdateEntriesAsync(upd);
+        }
+        // 3) delivery_in_progress → IN_TRANSIT
+        else if (sn.Status == ShipmentStatus.delivery_in_progress)
+        {
+            var upd = ids.Select(id => new OrderEntry
+            {
+                id              = id,
+                order_status    = OrderStatus.IN_TRANSIT,
+                delivery_status = PackageStatus.shipped
+            });
+            await _repo.UpdateEntriesAsync(upd);
+        }
+
+        _dirty = true;
+    }
+
+    /*―――――――― Delivery 单包裹通知（本视图不存明细）――――――*/
+    public Task ProcessDeliveryNotification(DeliveryNotification _) => Task.CompletedTask;
+
+    /*―――――――― 仪表盘查询 ――――――――*/
+    public async Task<SellerDashboard> QueryDashboard()
+    {
+        if (!_dirty) return _cachedDashboard;
+
+        await _viewRefresher.RefreshAsync(_sellerId);
+
+        var flat = (await _repo.QueryEntriesBySellerAsync(_sellerId)).ToList();
+
+        var view = new OrderSellerView(_sellerId)
+        {
+            count_orders    = flat.Select(e => e.order_id).Distinct().Count(),
+            count_items     = flat.Count,
+            total_invoice   = flat.Sum(e => e.total_invoice),
+            total_amount    = flat.Sum(e => e.total_amount),
+            total_freight   = flat.Sum(e => e.freight_value),
+            total_incentive = flat.Sum(e => e.total_incentive),
+            total_items     = flat.Sum(e => e.total_items)
+        };
+
+        _cachedDashboard = new SellerDashboard(view, flat);
+        _dirty = false;
+        return _cachedDashboard;
+    }
+
+    /*―――――――― Reset ――――――――*/
+    public async Task Reset()
+    {
+        _cache.Clear();
+        await _repo.ResetAsync(_sellerId);
+        _dirty = true;
+    }
+}

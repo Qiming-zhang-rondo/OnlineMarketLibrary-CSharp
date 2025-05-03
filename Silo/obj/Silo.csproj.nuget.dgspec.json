@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/qiming/OnlineMarketLibrary-CSharp/Silo/Silo.csproj": {}
+    "C:\\毕设\\OnlineMarketLibrary-CSharp\\Silo\\Silo.csproj": {}
   },
   "projects": {
-    "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj": {
+    "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj",
+        "projectUniqueName": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj",
         "projectName": "OnlineMarket.Core",
-        "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj",
-        "packagesPath": "/Users/qiming/.nuget/packages/",
-        "outputPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/",
+        "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj",
+        "packagesPath": "C:\\Users\\f4848\\.nuget\\packages\\",
+        "outputPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/qiming/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\f4848\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -36,13 +36,18 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
               "version": "[9.0.4, )"
@@ -50,6 +55,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[7.0.11, )"
             }
           },
           "imports": [
@@ -63,26 +72,40 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\f4848\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/OnlineMarket.OrleansImpl.csproj": {
+    "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.OrleansImpl\\OnlineMarket.OrleansImpl.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/OnlineMarket.OrleansImpl.csproj",
+        "projectUniqueName": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.OrleansImpl\\OnlineMarket.OrleansImpl.csproj",
         "projectName": "OnlineMarket.OrleansImpl",
-        "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/OnlineMarket.OrleansImpl.csproj",
-        "packagesPath": "/Users/qiming/.nuget/packages/",
-        "outputPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/obj/",
+        "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.OrleansImpl\\OnlineMarket.OrleansImpl.csproj",
+        "packagesPath": "C:\\Users\\f4848\\.nuget\\packages\\",
+        "outputPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.OrleansImpl\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/qiming/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\f4848\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -94,8 +117,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj": {
-                "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj"
+              "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj": {
+                "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj"
               }
             }
           }
@@ -108,13 +131,18 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
             "Microsoft.Extensions.Logging.Console": {
               "target": "Package",
               "version": "[7.0.0, )"
@@ -147,6 +175,10 @@
               "target": "Package",
               "version": "[7.0.5, )"
             },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[7.0.11, )"
+            },
             "StackExchange.Redis": {
               "target": "Package",
               "version": "[2.7.17, )"
@@ -163,26 +195,40 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\f4848\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/qiming/OnlineMarketLibrary-CSharp/Silo/Silo.csproj": {
+    "C:\\毕设\\OnlineMarketLibrary-CSharp\\Silo\\Silo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/qiming/OnlineMarketLibrary-CSharp/Silo/Silo.csproj",
+        "projectUniqueName": "C:\\毕设\\OnlineMarketLibrary-CSharp\\Silo\\Silo.csproj",
         "projectName": "Silo",
-        "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/Silo/Silo.csproj",
-        "packagesPath": "/Users/qiming/.nuget/packages/",
-        "outputPath": "/Users/qiming/OnlineMarketLibrary-CSharp/Silo/obj/",
+        "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\Silo\\Silo.csproj",
+        "packagesPath": "C:\\Users\\f4848\\.nuget\\packages\\",
+        "outputPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\Silo\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/qiming/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\f4848\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -194,11 +240,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj": {
-                "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj"
+              "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj": {
+                "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj"
               },
-              "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/OnlineMarket.OrleansImpl.csproj": {
-                "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/OnlineMarket.OrleansImpl.csproj"
+              "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.OrleansImpl\\OnlineMarket.OrleansImpl.csproj": {
+                "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.OrleansImpl\\OnlineMarket.OrleansImpl.csproj"
               }
             }
           }
@@ -211,8 +257,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -221,6 +268,10 @@
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
               "version": "[7.0.12, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
             },
             "Microsoft.Extensions.Hosting": {
               "target": "Package",
@@ -233,6 +284,10 @@
             "Npgsql": {
               "target": "Package",
               "version": "[7.0.5, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
+              "target": "Package",
+              "version": "[7.0.11, )"
             },
             "OrleansDashboard": {
               "target": "Package",
@@ -258,6 +313,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -266,7 +339,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\f4848\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

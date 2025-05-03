@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="../build/Silo.props" />
+  <Import Project="..\build\Silo.props" />
 </Project>
