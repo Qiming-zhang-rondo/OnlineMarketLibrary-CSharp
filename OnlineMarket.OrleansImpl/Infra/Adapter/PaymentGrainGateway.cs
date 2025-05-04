@@ -12,12 +12,5 @@ class PaymentGrainGateway : IPaymentGateway
     public Task StartPaymentAsync(InvoiceIssued v)
     {
         return _gf.GetGrain<IPaymentActor>(v.customer.CustomerId).ProcessPayment(v);
-        // return Task.CompletedTask;
-        // var ok = new PaymentConfirmed(
-        //     v.customer, v.orderId, v.totalInvoice, v.items,
-        //     DateTime.UtcNow, Guid.NewGuid().ToString());
-        //
-        // return _gf.GetGrain<IOrderActor>(v.customer.CustomerId)
-        //     .ProcessPaymentConfirmed(ok);
     }
 }

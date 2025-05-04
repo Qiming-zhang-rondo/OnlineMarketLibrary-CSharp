@@ -17,7 +17,5 @@ public interface IOrderRepository
     Task ResetAsync(int customerId);
 }
 
-// 詹别的外部交互
-// public interface IStockGateway  { Task<ItemStatus> TryReserveAsync(CartItem item); }
-// public interface ISellerNotifier{ Task NotifyInvoiceAsync(InvoiceIssued v); }
+// 外部交互
 public interface IPaymentGateway{ Task StartPaymentAsync(InvoiceIssued v); }

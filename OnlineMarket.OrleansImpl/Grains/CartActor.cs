@@ -1,71 +1,49 @@
-// using System;
-// using System.Collections.Generic;
-// using System.Threading;
-// using System.Threading.Tasks;
-// using Microsoft.Extensions.Logging;
-// using OnlineMarket.OrleansImpl.Interfaces;
-// using OnlineMarket.Core.Common.Entities;
-// using OnlineMarket.Core.Common.Requests;
-// using OnlineMarket.Core.Common.Config;
-// using OnlineMarket.Core.Interfaces;
-// using OnlineMarket.Core.Services;
-// using OnlineMarket.OrleansImpl.Infra;
-// using Orleans;
-// using Orleans.Runtime;
-// using OnlineMarket.OrleansImpl.Infra.Adapter;
-// using OnlineMarket.OrleansImpl.Tests.Infra.Mocks;
-//
-// namespace OnlineMarket.OrleansImpl.Grains;
-//
-// public class CartActor : Grain, ICartActor
-// {
-//     protected readonly ILogger<CartServiceCore> logger;
-//     protected readonly IPersistentState<Cart> cartState;
-//
-//     protected CartServiceCore cartService = null!;
-//     protected int customerId;
-//     protected AppConfig config;
-//
-//     public CartActor(
-//         [PersistentState("cart", Constants.OrleansStorage)] IPersistentState<Cart> cartState,
-//         AppConfig config,
-//         ILogger<CartServiceCore> logger)
-//     {
-//         this.cartState = cartState;
-//         this.logger = logger;
-//         this.config = config;
-//     }
-//
-//     public override Task OnActivateAsync(CancellationToken cancellationToken)
-//     {
-//         customerId = (int)this.GetPrimaryKeyLong();
-//
-//         if (cartState.State is null || cartState.State.customerId == 0)
-//         {
-//             cartState.State = new Cart(customerId);
-//         }
-//
-//         cartService = new CartServiceCore(
-//             customerId,
-//             logger,
-//             // new FakeOrderActorAdapter(),
-//             new OrderActorAdapter(customerId,GrainFactory),
-//             async () => await cartState.WriteStateAsync(),
-//             trackHistory: false
-//         );
-//
-//         return Task.CompletedTask;
-//     }
-//
-//     public virtual Task<Cart> GetCart() => cartService.GetCart();
-//
-//     public virtual Task<List<CartItem>> GetItems() => cartService.GetItems();
-//
-//     public virtual Task AddItem(CartItem item) => cartService.AddItem(item);
-//
-//     public virtual Task NotifyCheckout(CustomerCheckout basketCheckout) => cartService.NotifyCheckout(basketCheckout);
-//
-//     public virtual Task Seal() => cartService.Seal();
-//
-//     public virtual Task<List<CartItem>> GetHistory(string tid) => cartService.GetHistory(tid);
-// }
+// OnlineMarket.OrleansImpl.Grains/CartActor.cs
+
+using Microsoft.Extensions.Logging;
+using OnlineMarket.Core.Common.Config;
+using OnlineMarket.Core.Common.Entities;
+using OnlineMarket.Core.Common.Requests;
+using OnlineMarket.OrleansImpl.Infra;
+using OnlineMarket.OrleansImpl.Infra.Adapter;
+using OnlineMarket.OrleansImpl.Interfaces;
+using Orleans.Concurrency;
+using Orleans.Runtime;
+
+[Reentrant]
+public sealed class CartActor : Grain, ICartActor
+{
+    private readonly IPersistentState<Cart> _state;
+    private readonly AppConfig   _cfg;
+    private readonly ILogger<CartServiceCore> _log;
+    private CartServiceCore _svc = null!;
+
+    public CartActor(
+        [PersistentState("cart", Constants.OrleansStorage)]
+        IPersistentState<Cart> state,
+        AppConfig cfg,
+        ILogger<CartServiceCore> log)
+    { _state = state; _cfg = cfg; _log = log; }
+
+    public override Task OnActivateAsync(CancellationToken _)
+    {
+        var repo   = new OrleansCartRepository(_state);
+        var order  = new OrderGrainGateway(GrainFactory);
+        var clock  = SystemClock.Instance;
+
+        _svc = new CartServiceCore(
+            (int)this.GetPrimaryKeyLong(),
+            repo, order, clock, _log,
+            trackHistory: _cfg.TrackCartHistory);
+
+        return Task.CompletedTask;
+    }
+
+    /*── ICartActor 接口全部转调 ──────────*/
+    public Task AddItem(CartItem i)                   => _svc.AddItemAsync(i);
+    public Task<List<CartItem>> GetItems()            => _svc.GetItemsAsync().ContinueWith(t=>t.Result.ToList());
+    public Task NotifyCheckout(CustomerCheckout cc)   => _svc.NotifyCheckoutAsync(cc);
+    public Task<Cart> GetCart()                       => _svc.GetCartAsync();
+    public Task Seal()                                => _svc.SealAsync();
+    public Task<List<CartItem>> GetHistory(string id) => _svc.GetHistoryAsync(id).ContinueWith(t=>t.Result.ToList());
+}

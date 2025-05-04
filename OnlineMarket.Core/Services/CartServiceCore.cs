@@ -1,89 +1,87 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using OnlineMarket.Core.Common.Entities;
-using OnlineMarket.Core.Common.Requests;
-using OnlineMarket.Core.Common.Events;
+// OnlineMarket.Core.Services/CartServiceCore.cs
+
 using Microsoft.Extensions.Logging;
+using OnlineMarket.Core.Common.Entities;
+using OnlineMarket.Core.Common.Events;
+using OnlineMarket.Core.Common.Requests;
 using OnlineMarket.Core.Interfaces;
+using OnlineMarket.Core.Ports;
 
-namespace OnlineMarket.Core.Services
+public sealed class CartServiceCore : ICartService
 {
-    public class CartServiceCore : ICartService
+    private readonly int            _customerId;
+    private readonly ICartRepository _repo;
+    private readonly IOrderGateway   _order;
+    private readonly bool            _trackHistory;
+    private readonly IClock          _clock;
+    private readonly ILogger         _log;
+
+    private Cart _cart;                                     // 当前快照
+    private readonly Dictionary<string,List<CartItem>> _hist = new();
+
+    public CartServiceCore(int customerId,
+                           ICartRepository repo,
+                           IOrderGateway   order,
+                           IClock clock,
+                           ILogger log,
+                           bool  trackHistory = false)
     {
-        protected readonly ILogger<CartServiceCore> logger;
-        protected readonly IOrderService orderService;
-        protected readonly Func<Task> saveCallback;
-        protected readonly bool trackHistory;
+        _customerId   = customerId;
+        _repo         = repo;
+        _order        = order;
+        _clock        = clock;
+        _log          = log;
+        _trackHistory = trackHistory;
 
-        protected readonly Dictionary<string, List<CartItem>> history = new();
-        protected readonly Cart cart;
+        // 初始化快照（若仓库中没有则新建）
+        _cart = repo.LoadAsync(customerId).GetAwaiter().GetResult()
+              ?? new Cart(customerId);
+    }
 
-        public CartServiceCore(int customerId, ILogger<CartServiceCore> logger, IOrderService orderService, Func<Task> saveCallback, bool trackHistory = false)
-        {
-            this.cart = new Cart(customerId);
-            this.logger = logger;
-            this.orderService = orderService;
-            this.saveCallback = saveCallback;
-            this.trackHistory = trackHistory;
-        }
+    /*──────── ICartService 实现 ────────*/
 
-        public Task<Cart> GetCart()
-        {
-            return Task.FromResult(cart);
-        }
+    public Task<Cart> GetCartAsync()   => Task.FromResult(_cart);
+    public Task<IReadOnlyList<CartItem>> GetItemsAsync() => 
+        Task.FromResult<IReadOnlyList<CartItem>>(_cart.items);
 
-        public Task<List<CartItem>> GetItems()
-        {
-            return Task.FromResult(cart.items);
-        }
+    public async Task AddItemAsync(CartItem item)
+    {
+        if (item.Quantity <= 0)
+            throw new InvalidOperationException("Quantity must be > 0");
 
-        public async Task AddItem(CartItem item)
-        {
-            if (item.Quantity <= 0)
-                throw new ArgumentException($"Item {item.ProductId} shows no positive quantity.");
+        if (_cart.status == CartStatus.CHECKOUT_SENT)
+            throw new InvalidOperationException("Cart already in checkout");
 
-            if (cart.status == CartStatus.CHECKOUT_SENT)
-                throw new InvalidOperationException($"Cart already sent for checkout.");
+        _cart.items.Add(item);
+        await _repo.SaveAsync(_cart);
+    }
 
-            cart.items.Add(item);
-            await saveCallback();
-        }
+    public async Task NotifyCheckoutAsync(CustomerCheckout cc)
+    {
+        _cart.status = CartStatus.CHECKOUT_SENT;
+        var rs = new ReserveStock(_clock.UtcNow, cc, _cart.items, cc.instanceId);
 
-        public virtual async Task NotifyCheckout(CustomerCheckout customerCheckout)
-        {
-            var checkout = new ReserveStock(DateTime.UtcNow, customerCheckout, cart.items, customerCheckout.instanceId);
-            cart.status = CartStatus.CHECKOUT_SENT;
+        if (_trackHistory)
+            _hist.TryAdd(cc.instanceId, new(_cart.items));
 
-            try
-            {
-                if (trackHistory)
-                {
-                    history.TryAdd(customerCheckout.instanceId, new List<CartItem>(cart.items));
-                }
+        await _order.CheckoutAsync(rs);        // 调用网关
+        await SealAsync();
+    }
 
-                await orderService.Checkout(checkout);
-                await Seal();
-            }
-            catch (Exception e)
-            {
-                var str = $"Checkout exception caught in cart ID {cart.customerId}: {e.StackTrace} - {e.Source} - {e.InnerException} - {e.Data}";
-                logger.LogError(str);
-                throw new ApplicationException(str);
-            }
-        }
+    public async Task SealAsync()
+    {
+        _cart.status = CartStatus.OPEN;
+        _cart.items.Clear();
+        await _repo.SaveAsync(_cart);
+    }
 
-        public async Task Seal()
-        {
-            cart.status = CartStatus.OPEN;
-            cart.items.Clear();
-            await saveCallback();
-        }
+    public Task<IReadOnlyList<CartItem>> GetHistoryAsync(string tid) =>
+        Task.FromResult<IReadOnlyList<CartItem>>(
+            _hist.TryGetValue(tid, out var l) ? l : new());
 
-        public Task<List<CartItem>> GetHistory(string tid)
-        {
-            var result = history.TryGetValue(tid, out var list) ? list : new List<CartItem>();
-            return Task.FromResult(result);
-        }
+    public async Task ResetAsync()
+    {
+        _cart = new Cart(_customerId);
+        await _repo.ClearAsync(_customerId);
     }
 }
