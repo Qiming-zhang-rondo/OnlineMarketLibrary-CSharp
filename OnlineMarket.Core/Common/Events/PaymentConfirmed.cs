@@ -11,7 +11,7 @@ public sealed class PaymentConfirmed
 
     public int orderId { get; set; }
     public float totalAmount { get; set; }
-    public List<OrderItem> items { get; set; }
+    public List<OrderItem>? items { get; set; }
     public DateTime date { get; set; }
     public string instanceId { get; set; }
 

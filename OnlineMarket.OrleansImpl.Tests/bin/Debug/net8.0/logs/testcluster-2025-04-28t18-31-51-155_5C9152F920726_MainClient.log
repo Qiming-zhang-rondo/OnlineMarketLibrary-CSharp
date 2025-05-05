@@ -1,0 +1,38 @@
+﻿[2025-04-28 18:31:52.206 GMT 18	Information	100314	Orleans.OutsideRuntimeClient]	Starting Orleans client with runtime version "7.2.1. Commit Hash: edf41834a70b3f3dbc931e3d6961dd1f7bb0aba5+edf41834a70b3f3dbc931e3d6961dd1f7bb0aba5 (Release).", local address 192.168.10.220 and client id sys.client/83f49ca4e996418694e27ef392457b72	
+[2025-04-28 18:31:52.209 GMT 15	Information	101309	Orleans.Messaging.GatewayManager]	Found 1 gateways: [gwy.tcp://127.0.0.1:44280/0]	
+[2025-04-28 18:31:52.211 GMT 15	Information	0	Orleans.Runtime.Messaging.NetworkingTrace]	Establishing connection to endpoint S127.0.0.1:44280:0	
+[2025-04-28 18:31:52.215 GMT 27	Information	0	Orleans.Runtime.Messaging.NetworkingTrace]	Connected to endpoint S127.0.0.1:44280:0	
+[2025-04-28 18:31:52.224 GMT 5	Information	0	Orleans.Runtime.Messaging.NetworkingTrace]	Established connection to S127.0.0.1:28192:104869912 with protocol version Version1	
+[2025-04-28 18:31:52.225 GMT 11	Information	0	Orleans.Runtime.Messaging.NetworkingTrace]	Connection [Local: 127.0.0.1:13522, Remote: 127.0.0.1:44280, ConnectionId: 0HNC6GBP1NMDH] established with S127.0.0.1:44280:0	
+[2025-04-28 18:31:52.251 GMT 27	Information	100929	Orleans.OutsideRuntimeClient]	Started client with address [GrainAddress GrainId sys.client/83f49ca4e996418694e27ef392457b72, ActivationId: @b31b6bfa238240de9ab1be238a9b16aa, SiloAddress: C192.168.10.220:0:-104869912] and id sys.client/83f49ca4e996418694e27ef392457b72	
+[2025-04-28 18:31:52.252 GMT 27	Information	0	Orleans.ClientOptionsLogger]	Configuration Orleans.Configuration.ClientMessagingOptions: 
+ClientSenderBuckets: 8192
+PreferredFamily: InterNetwork
+NetworkInterfaceName: 
+LocalAddress: 
+ResponseTimeout: 00:00:30
+ResponseTimeoutWithDebugger: 00:30:00
+DropExpiredMessages: True
+MaxMessageHeaderSize: 10485760
+MaxMessageBodySize: 104857600
+	
+[2025-04-28 18:31:52.252 GMT 27	Information	0	Orleans.ClientOptionsLogger]	Configuration Orleans.Configuration.ClusterOptions: 
+ClusterId: testcluster-2025-04-28t18-31-51-155
+ServiceId: 4ad712c6d25247389d6c4edd1b4fcd29
+	
+[2025-04-28 18:31:52.252 GMT 27	Information	0	Orleans.ClientOptionsLogger]	Configuration Orleans.Configuration.ConnectionOptions: 
+ProtocolVersion: Version1
+ConnectionsPerEndpoint: 1
+ConnectionRetryDelay: 00:00:01
+OpenConnectionTimeout: 00:00:05
+	
+[2025-04-28 18:31:52.252 GMT 27	Information	0	Orleans.ClientOptionsLogger]	Configuration Orleans.Configuration.StaticGatewayListProviderOptions: 
+Gateways.0: gwy.tcp://127.0.0.1:44280/0
+	
+[2025-04-28 18:31:52.252 GMT 27	Information	0	Microsoft.Hosting.Lifetime]	Application started. Press Ctrl+C to shut down.	
+[2025-04-28 18:31:52.252 GMT 27	Information	0	Microsoft.Hosting.Lifetime]	Hosting environment: Development	
+[2025-04-28 18:31:52.252 GMT 27	Information	0	Microsoft.Hosting.Lifetime]	Content root path: /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl.Tests/bin/Debug/net8.0/	
+[2025-04-28 18:31:52.324 GMT 22	Information	0	Microsoft.Hosting.Lifetime]	Application is shutting down...	
+[2025-04-28 18:31:52.324 GMT 22	Information	0	Orleans.ClusterClient]	Client shutting down	
+[2025-04-28 18:31:52.326 GMT 15	Information	0	Orleans.Runtime.Messaging.NetworkingTrace]	Closing connection [Local: 127.0.0.1:13522, Remote: 127.0.0.1:44280, ConnectionId: 0HNC6GBP1NMDH]	
+[2025-04-28 18:31:52.340 GMT 11	Information	0	Orleans.ClusterClient]	Client shutdown completed	
