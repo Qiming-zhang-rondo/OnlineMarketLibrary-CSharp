@@ -7,7 +7,7 @@ using OnlineMarket.Core.Common.Config;
 // using OnlineMarket.OrleansImpl.Infra.SellerDb;
 // using Microsoft.EntityFrameworkCore;
 
-namespace Test.Infra;
+namespace OnlineMarket.OrleansImpl.Tests.Infra;
 
 public abstract class BaseTest
 {
@@ -70,28 +70,28 @@ public abstract class BaseTest
         await cart.NotifyCheckout(customerCheckout);
     }
     //当前没有实现
-    // protected async Task InitData(int numCustomer, int numStockItem)
-    // {
-    //     // load customer in customer actor
-    //     for (var customerId = 1; customerId <= numCustomer; customerId++)
-    //     {
-    //         var customer = _cluster.GrainFactory.GetGrain<ICustomerActor>(customerId);
-    //         await customer.SetCustomer(new Customer()
-    //         {
-    //             id = customerId,
-    //             first_name = "",
-    //             last_name = "",
-    //             address = "",
-    //             complement = "",
-    //             birth_date = "",
-    //             zip_code = "",
-    //             city = "",
-    //             state = "",
-    //             delivery_count = 0,
-    //             failed_payment_count = 0,
-    //             success_payment_count = 0
-    //         });
-    //     }
+    protected async Task InitData(int numCustomer, int numStockItem)
+    {
+        // load customer in customer actor
+        for (var customerId = 1; customerId <= numCustomer; customerId++)
+        {
+            var customer = _cluster.GrainFactory.GetGrain<ICustomerActor>(customerId);
+            await customer.SetCustomer(new Customer()
+            {
+                id = customerId,
+                first_name = "",
+                last_name = "",
+                address = "",
+                complement = "",
+                birth_date = "",
+                zip_code = "",
+                city = "",
+                state = "",
+                delivery_count = 0,
+                failed_payment_count = 0,
+                success_payment_count = 0
+            });
+        }
 
     //     var config = (AppConfig)_cluster.Client.ServiceProvider.GetService(typeof(AppConfig));
 
@@ -115,7 +115,7 @@ public abstract class BaseTest
     //             version = 1.ToString()
     //         });
     //     }
-    // }
+    }
 
     protected CartItem GenerateCartItem(int sellerId, int productId)
     {
