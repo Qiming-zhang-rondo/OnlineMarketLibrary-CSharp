@@ -1,4 +1,5 @@
-﻿using OnlineMarket.Core.Common.Entities;
+﻿using System.Linq.Expressions;
+using OnlineMarket.Core.Common.Entities;
 
 namespace OnlineMarket.Core.Ports;
 
@@ -9,8 +10,9 @@ public interface IOrderEntryViewRepository
     Task SaveCacheAsync(IDictionary<(int,int),List<int>> cache);
 
     Task AddEntriesAsync(IEnumerable<OrderEntry> entries);    // INSERT 新行
-    Task UpdateEntriesAsync(IEnumerable<OrderEntry> entries); // UPDATE/DELETE
-
+    Task UpdateEntriesAsync(IEnumerable<OrderEntry> entries, params Expression<Func<OrderEntry, object>>[] propertiesToUpdate); // UPDATE/DELETE
+    Task DeleteEntriesAsync(IEnumerable<int> ids);
+    
     Task<IList<OrderEntry>> QueryEntriesBySellerAsync(int sellerId);
     Task ResetAsync(int sellerId);
 }

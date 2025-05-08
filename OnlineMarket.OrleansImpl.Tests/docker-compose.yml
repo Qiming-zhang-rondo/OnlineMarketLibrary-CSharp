@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  pg-test:
+    image: postgres:15-alpine          # 随意换版本
+    container_name: online_pg_test
+    environment:
+      POSTGRES_USER:  online
+      POSTGRES_PASSWORD: online
+      POSTGRES_DB: online_test
+      PGDATABASE:  online_test    # ← 这样 pg_isready 就不用 -d 了
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U online -d online_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

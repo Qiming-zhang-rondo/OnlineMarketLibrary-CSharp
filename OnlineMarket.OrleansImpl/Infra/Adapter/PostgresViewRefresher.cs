@@ -18,7 +18,7 @@ public sealed class PostgresViewRefresher : IMaterializedViewRefresher
         //     .ExecuteSqlRawAsync($"CALL refresh_order_view({sellerId})");
         await db.Database
             .ExecuteSqlRawAsync(
-                SellerDbContext.GetRefreshCustomOrderSellerViewSql(sellerId)
+                SellerDbContext.RefreshSellerViewSql(sellerId)
             );
     }
 }

@@ -1,9 +1,13 @@
-﻿using OnlineMarket.Core.Common.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using OnlineMarket.Core.Common.Entities;
 using OnlineMarket.Core.Common.Requests;
 using OnlineMarket.OrleansImpl.Interfaces;
 using Orleans.TestingHost;
 // using OnlineMarket.OrleansImpl.Transactional;
 using OnlineMarket.Core.Common.Config;
+using OnlineMarket.OrleansImpl.Infra.SellerDb;
+
 // using OnlineMarket.OrleansImpl.Infra.SellerDb;
 // using Microsoft.EntityFrameworkCore;
 
@@ -19,20 +23,31 @@ public abstract class BaseTest
     {
         this._cluster = cluster;
     }
-    //当前没有用到
-    // protected SellerDbContext InitSellerDbContext()
-    // {
-    //     // ensure schema is created
-    //     SellerDbContext context = (SellerDbContext) _cluster.Client.ServiceProvider.GetService(typeof(SellerDbContext));
+    
+    protected SellerDbContext InitSellerDbContext()
+    {
+        // ① 取 Primary‑Silo 的 IServiceProvider
+        var factory = _cluster.ServiceProvider          // ← 就这一行改掉
+            .GetRequiredService<IDbContextFactory<SellerDbContext>>();
+        
+       
 
-    //     AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-    //     context.Database.Migrate();
+        var ctx = factory.CreateDbContext();
+        
+        Console.WriteLine("→ TestCtx connecting to: " 
+                          + ctx.Database.GetDbConnection().ConnectionString);
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+        
+        
+        
+        /* ① 如库/表不存在就直接创建 —— 不依赖迁移脚本 */
+        ctx.Database.EnsureDeleted();
+        // ctx.Database.EnsureCreated();                // ★ 用 EnsureCreated
 
-    //     // truncate previous records
-    //     context.OrderEntries.ExecuteDelete();
-
-    //     return context;
-    // }
+        
+        ctx.Database.Migrate();           // 若已迁移过会自动跳过
+        return ctx;
+    }
 
     protected CustomerCheckout BuildCustomerCheckout(int customerId)
     {

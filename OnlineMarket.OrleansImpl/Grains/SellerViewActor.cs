@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 using OnlineMarket.Core.Common.Config;
 using OnlineMarket.Core.Common.Entities;
 using OnlineMarket.Core.Common.Events;
@@ -43,6 +44,11 @@ public sealed class SellerViewActor : Grain, ISellerViewActor
     {
         
         int sid = (int)this.GetPrimaryKeyLong();
+        // await using var db = _dbFactory.CreateDbContext();
+        // _log.LogInformation(
+        //     "ActorCtx uses {cs}",
+        //     db.Database.GetDbConnection().ConnectionString);
+        
 
         /* ① 用新的 DbContext 建&刷视图（如果已存在就跳过） */
         await using (var db = _dbFactory.CreateDbContext())
@@ -50,14 +56,14 @@ public sealed class SellerViewActor : Grain, ISellerViewActor
             db.Database.EnsureCreated();
             
             // 建视图：加 IF NOT EXISTS 保险起见
-            string createSql   = SellerDbContext.CreateCustomOrderSellerViewSql(sid)
+            string createSql   = SellerDbContext.CreateSellerViewSql(sid)
                 .Replace("CREATE MATERIALIZED VIEW",
                     "CREATE MATERIALIZED VIEW IF NOT EXISTS");
             await db.Database.ExecuteSqlRawAsync(createSql);
-
+        
             // 第一次也刷新一下，让视图里至少有空结果集
             await db.Database.ExecuteSqlRawAsync(
-                SellerDbContext.GetRefreshCustomOrderSellerViewSql(sid));
+                SellerDbContext.RefreshSellerViewSql(sid));
         }
         
         // var db     = _dbFactory.CreateDbContext();     // 每个激活期一个 DbContext
@@ -78,12 +84,53 @@ public sealed class SellerViewActor : Grain, ISellerViewActor
     public Task SetSeller(Seller s)                         => _svc.SetSeller(s);
     public Task<Seller?> GetSeller()                        => _svc.GetSeller();
     public Task ProcessNewInvoice(InvoiceIssued v)          => _svc.ProcessNewInvoice(v);
+    // public async Task ProcessNewInvoice(InvoiceIssued v)
+    // {
+    //     try
+    //     {
+    //         await _svc.ProcessNewInvoice(v);
+    //     }
+    //     catch (PostgresException pgEx)
+    //     {
+    //         // 1) 记录日志
+    //         _log.LogError(pgEx, "处理新发票时写数据库失败：{Message}", pgEx.Message);
+    //
+    //         // 2) 抛出 Orleans 可序列化的异常类型
+    //         throw new OrleansException($"数据库写入失败：{pgEx.Message}");
+    //     }
+    // }
     public Task ProcessPaymentConfirmed(PaymentConfirmed v) => _svc.ProcessPaymentConfirmed(v);
     public Task ProcessPaymentFailed(PaymentFailed v)       => _svc.ProcessPaymentFailed(v);
     public Task ProcessShipmentNotification(ShipmentNotification v)
                                                         => _svc.ProcessShipmentNotification(v);
     public Task ProcessDeliveryNotification(DeliveryNotification v)
                                                         => _svc.ProcessDeliveryNotification(v);
-    public Task<SellerDashboard> QueryDashboard()           => _svc.QueryDashboard();
+    // public Task<SellerDashboard> QueryDashboard()           => _svc.QueryDashboard();
+    public async Task<SellerDashboard> QueryDashboard()
+    {
+        try
+        {
+            // 调用你的业务逻辑
+            return await _svc.QueryDashboard();
+        }
+        catch (PostgresException pgEx)
+        {
+            // 记录日志
+            _log.LogError(pgEx, "QueryDashboard 从 Postgres 读取视图失败：{Message}", pgEx.Message);
+            // 抛出 Orleans 友好的异常
+            throw new OrleansException($"数据库错误：{pgEx.Message}");
+        }
+        catch (DbUpdateException dbEx)
+        {
+            _log.LogError(dbEx, "QueryDashboard 更新数据库失败：{Message}", dbEx.Message);
+            throw new OrleansException($"数据更新错误：{dbEx.Message}");
+        }
+        catch (Exception ex)
+        {
+            // 捕获其它所有异常，防止任何“未知类型”走出 Grain
+            _log.LogError(ex, "QueryDashboard 遇到未知错误");
+            throw new OrleansException("内部错误，请查看服务器日志。");
+        }
+    }
     public Task Reset()                                     => _svc.Reset();
 }

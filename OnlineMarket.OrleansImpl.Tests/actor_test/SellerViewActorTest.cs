@@ -11,14 +11,28 @@ using OnlineMarket.Core.Common.Requests;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using OnlineMarket.OrleansImpl.Infra.SellerDb;
 using OnlineMarket.OrleansImpl.Tests.Infra.Eventual;
+using Xunit.Abstractions;
 
 namespace OnlineMarket.OrleansImpl.Tests.actor_test;
 
-[Collection(NonTransactionalClusterCollection.Name)]   // 同一个 Cluster，串行执行
+[Collection(NonTransactionalClusterCollectionWithDb.Name)]   // 同一个 Cluster，串行执行
 public class SellerViewActorTest : BaseTest
 {
-    public SellerViewActorTest(NonTransactionalClusterFixture fx) : base(fx.Cluster) { }
+    private readonly ITestOutputHelper _output;
+    public SellerViewActorTest(
+        NonTransactionalClusterFixtureWithDb fx,
+        ITestOutputHelper output
+    ) : base(fx.Cluster)
+    {
+        _output = output;
+    }
+
+    
 
     /*─────────────── 帮助方法 ───────────────*/
     private static InvoiceIssued Invoice(int cid, int oid, int sid)
@@ -36,31 +50,42 @@ public class SellerViewActorTest : BaseTest
     }
     private static ShipmentNotification Ship(int cid,int oid,int sid,ShipmentStatus st) =>
         new(cid, oid, DateTime.UtcNow, Guid.NewGuid().ToString(), st, sid);
-
-    /*─────────────────── Ⅰ. SellerActor 测试 ───────────────────*/
-
+    
+    /*─────────────────── Ⅱ. SellerViewActor 测试 ───────────────────*/
+    
     [Fact]
-    public async Task SellerActor_PaymentConfirmed_Should_Update_Status()
+    public async Task SellerViewActor_Write_Should_Persist_To_Pg()
     {
-        int sid = 6001, cid = 10, oid = 9001;
-        var g   = _cluster.GrainFactory.GetGrain<ISellerActor>(sid);   // 默认映射到 SellerActor
+        
+        InitSellerDbContext();
+        /* arrange */
+        
+        var factory = _cluster.ServiceProvider.GetRequiredService<IDbContextFactory<SellerDbContext>>();
+        await using var ctx = await factory.CreateDbContextAsync();
+        // 确保是同一个 Conn
+        // _output.WriteLine("TestCtx uses " + ctx.Database.GetDbConnection().ConnectionString);
+        // ctx.Database.EnsureDeleted();
+        // ctx.Database.EnsureCreated();
+        int sid = 7001, cid = 20, oid = 9101;
+        var actor = _cluster.GrainFactory.GetGrain<ISellerViewActor>(
+            sid, "OnlineMarket.OrleansImpl.Grains.SellerViewActor");
 
-        await g.ProcessNewInvoice(Invoice(cid, oid, sid));
-        await Task.Delay(30);
+        /* act */
+        await actor.ProcessNewInvoice(Invoice(cid, oid, sid));
+        await Task.Delay(100);
+        var count = await ctx.OrderEntries.CountAsync();
+        Assert.Equal(1, count);   // 期待刚插入一条
 
-        await g.ProcessPaymentConfirmed(new PaymentConfirmed(
-            new CustomerCheckout { CustomerId = cid }, oid, 123, new(),
-            DateTime.UtcNow, Guid.NewGuid().ToString()));
+        var rows = await ctx.OrderEntries
+            .Where(e => e.seller_id == sid && e.order_id == oid)
+            .ToListAsync();
 
-        await Task.Delay(30);
-        var dash = await g.QueryDashboard();
-        Assert.All(dash.OrderEntries,
-            e => Assert.Equal(OrderStatus.PAYMENT_PROCESSED, e.order_status));
 
-        await g.Reset();
+        Assert.Single(rows);                    // 插进去 1 行
+        Assert.Equal(OrderStatus.INVOICED, rows[0].order_status);
     }
 
-    /*─────────────────── Ⅱ. SellerViewActor 测试 ───────────────────*/
+    
 
     // **关键**：显式指定 GrainClassName，告诉 Orleans 取 SellerViewActor
     private ISellerViewActor ViewGrain(int sellerId) =>
@@ -70,15 +95,18 @@ public class SellerViewActorTest : BaseTest
     [Fact]
     public async Task SellerViewActor_NewInvoice_Should_Be_In_View()
     {
+        InitSellerDbContext();
+        
         int sid = 7001, cid = 20, oid = 9101;
-        var g   = ViewGrain(sid);
+        var g = _cluster.GrainFactory.GetGrain<ISellerViewActor>(
+            sid, "OnlineMarket.OrleansImpl.Grains.SellerViewActor");
+        // var g   = ViewGrain(sid);
 
         await g.ProcessNewInvoice(Invoice(cid, oid, sid));
         await Task.Delay(50);                       // 给 EF / WriteState 缓冲
-
-        // var dash = await g.QueryDashboard();
-        await g.QueryDashboard();          // ① 第一次调用 → 刷新视图
-        await Task.Delay(50); 
+        
+        // await g.QueryDashboard();          // ① 第一次调用 → 刷新视图
+        await Task.Delay(100); 
         var dash = await g.QueryDashboard();   // ② 真正取数据
         Assert.Single(dash.OrderEntries);
         Assert.Equal(1, dash.SellerView.count_orders);
@@ -89,15 +117,18 @@ public class SellerViewActorTest : BaseTest
     [Fact]
     public async Task SellerViewActor_Shipment_Workflow()
     {
+        InitSellerDbContext();
+        
         int sid = 7002, cid = 21, oid = 9102;
         var g   = ViewGrain(sid);
 
         // ① 新发票
         await g.ProcessNewInvoice(Invoice(cid, oid, sid));
-        await Task.Delay(30);
+        await Task.Delay(1000);
 
         // ② approved  → READY_FOR_SHIPMENT / ready_to_ship
         await g.ProcessShipmentNotification(Ship(cid, oid, sid, ShipmentStatus.approved));
+        await Task.Delay(50);
         var dash1 = await g.QueryDashboard();
 
         Assert.Single(dash1.OrderEntries);
@@ -106,8 +137,9 @@ public class SellerViewActorTest : BaseTest
 
         // ③ in‑progress → IN_TRANSIT / shipped
         await g.ProcessShipmentNotification(Ship(cid, oid, sid, ShipmentStatus.delivery_in_progress));
+        await Task.Delay(500);
         var dash2 = await g.QueryDashboard();
-
+        
         Assert.Single(dash2.OrderEntries);
         Assert.Equal(PackageStatus.shipped , dash2.OrderEntries[0].delivery_status);
         Assert.Equal(OrderStatus.IN_TRANSIT, dash2.OrderEntries[0].order_status);

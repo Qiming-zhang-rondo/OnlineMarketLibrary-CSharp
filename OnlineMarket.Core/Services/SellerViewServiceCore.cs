@@ -79,6 +79,8 @@ public sealed class SellerViewServiceCore : ISellerViewService
     /*―――――――― Invoice ――――――――*/
     public async Task ProcessNewInvoice(InvoiceIssued inv)
     {
+        
+        
         var list = inv.items.Select(i => new OrderEntry
         {
             // 基本索引字段
@@ -109,7 +111,15 @@ public sealed class SellerViewServiceCore : ISellerViewService
         // 记录到本地 cache：供后续 Shipment/Delivery 快速定位
         _cache[(inv.customer.CustomerId, inv.orderId)] =
             list.Select(e => e.id).ToList();
+        // await _repo.SaveCacheAsync(_cache);
+        var key = (inv.customer.CustomerId, inv.orderId);
+        var ids = list.Select(e => e.id).ToList();
+
+        Console.WriteLine($">>> Cache key={key}, ids={string.Join(",", ids)}");
+        
+        // 如果你还保留旧的 repo 调用，也类似：
         await _repo.SaveCacheAsync(_cache);
+        Console.WriteLine(">>> SaveCacheAsync(repo) returned");
 
         _dirty = true;                                  // 仪表盘需要刷新
     }
@@ -122,19 +132,25 @@ public sealed class SellerViewServiceCore : ISellerViewService
     public async Task ProcessShipmentNotification(ShipmentNotification sn)
     {
         var key = (sn.CustomerId, sn.OrderId);
-
+        // Console.WriteLine($">>> Entering ProcessShipmentNotification for key={key}, status={sn.Status}");
+        //
+        // // 先看下缓存里有没有
+        // Console.WriteLine($">>> Cache contains key? {_cache.ContainsKey(key)}");
         if (!_cache.TryGetValue(key, out var ids))
         {
-            _log.LogWarning("SellerView[{Sid}] – entries not cached for order {Key}",
-                            _sellerId, key);
+            Console.WriteLine($">>> Cache miss for {key}, exiting");
             return;
         }
+        // Console.WriteLine($">>> Cache hit, ids = [{string.Join(',', ids)}]");
 
         // 1) finished：删除 + 审计
         if (sn.Status == ShipmentStatus.concluded)
         {
-            await _repo.UpdateEntriesAsync(
-                ids.Select(id => new OrderEntry { id = id }));  // 删除
+            Console.WriteLine(">>> Branch: concluded");
+
+            // 删除
+            await _repo.DeleteEntriesAsync(ids);
+            Console.WriteLine($">>> Deleted {ids.Count} entries");
 
             if (_logRecords)
             {
@@ -146,19 +162,26 @@ public sealed class SellerViewServiceCore : ISellerViewService
             _cache.Remove(key);
             await _repo.SaveCacheAsync(_cache);
         }
-        // 2) approved → READY_FOR_SHIPMENT
+        // 2) approved→ READY_FOR_SHIPMENT
         else if (sn.Status == ShipmentStatus.approved)
         {
+            Console.WriteLine($">>> Branch: approved");
             var upd = ids.Select(id => new OrderEntry
             {
                 id              = id,
+                // natural_key     = $"{sn.CustomerId}|{sn.OrderId}",
                 order_status    = OrderStatus.READY_FOR_SHIPMENT,
                 shipment_date   = sn.EventDate,
                 delivery_status = PackageStatus.ready_to_ship
             });
-            await _repo.UpdateEntriesAsync(upd);
+            await _repo.UpdateEntriesAsync(upd,
+                e => e.order_status,
+                e => e.shipment_date,
+                e => e.delivery_status
+                );
+            Console.WriteLine($">>> Updated entries to ready_to_ship");
         }
-        // 3) delivery_in_progress → IN_TRANSIT
+        // 3) delivery_in_progress→ IN_TRANSIT
         else if (sn.Status == ShipmentStatus.delivery_in_progress)
         {
             var upd = ids.Select(id => new OrderEntry
@@ -167,7 +190,9 @@ public sealed class SellerViewServiceCore : ISellerViewService
                 order_status    = OrderStatus.IN_TRANSIT,
                 delivery_status = PackageStatus.shipped
             });
-            await _repo.UpdateEntriesAsync(upd);
+            await _repo.UpdateEntriesAsync(upd, 
+                e => e.order_status,
+                e => e.delivery_status);
         }
 
         _dirty = true;
@@ -180,11 +205,11 @@ public sealed class SellerViewServiceCore : ISellerViewService
     public async Task<SellerDashboard> QueryDashboard()
     {
         if (!_dirty) return _cachedDashboard;
-
+        
         await _viewRefresher.RefreshAsync(_sellerId);
-
+        
         var flat = (await _repo.QueryEntriesBySellerAsync(_sellerId)).ToList();
-
+        
         var view = new OrderSellerView(_sellerId)
         {
             count_orders    = flat.Select(e => e.order_id).Distinct().Count(),
@@ -195,7 +220,7 @@ public sealed class SellerViewServiceCore : ISellerViewService
             total_incentive = flat.Sum(e => e.total_incentive),
             total_items     = flat.Sum(e => e.total_items)
         };
-
+        
         _cachedDashboard = new SellerDashboard(view, flat);
         _dirty = false;
         return _cachedDashboard;

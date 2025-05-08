@@ -1,132 +1,92 @@
-﻿// using Microsoft.Extensions.Configuration;
-// using Microsoft.Extensions.DependencyInjection;
-// using Microsoft.Extensions.Hosting;
-// using Microsoft.Extensions.Logging;
-// using OrleansApp.Infra;
-// using Orleans.Serialization;
-// using Orleans.TestingHost;
-// using Orleans.Infra.Redis;
-// using Orleans.Infra.SellerDb;
-// using OrleansApp.Service;
-// using Orleans.Hosting;
+﻿// Tests/Infra/Transactional/TransactionalClusterFixture.cs
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Orleans.Serialization;
+using Orleans.TestingHost;
+using OnlineMarket.OrleansImpl.Infra;
+// using Orleans.Transactions.Hosting;
+using OnlineMarket.OrleansImpl.Infra.Adapter;
+using OnlineMarket.Core.Interfaces;
+using Orleans.Hosting;
+using Orleans.Transactions;
 
-// namespace Test.Infra.Transactional;
 
-// /**
-// * https://learn.microsoft.com/en-us/dotnet/orleans/tutorials-and-samples/testing
-// * https://stackoverflow.com/questions/70640638/how-to-configure-testclusterbuilder-such-that-the-test-cluster-has-access-to-sms
-// */
-// public sealed class TransactionalClusterFixture : IDisposable
-// {
-//     public TestCluster Cluster { get; private set; }
+namespace OnlineMarket.OrleansImpl.Tests.Infra.Transactional;
 
-//     private class SiloConfigurator : ISiloConfigurator
-//     {
-//         // https://stackoverflow.com/questions/55497800/populate-iconfiguration-for-unit-tests
-//         public void Configure(ISiloBuilder hostBuilder)
-//         {
-//             hostBuilder.ConfigureLogging(logging =>
-//             {
-//                 logging.ClearProviders();
-//                 logging.AddConsole();
-//                 logging.SetMinimumLevel(LogLevel.Warning);
-//             });
+/// <summary>带 Orleans‑Transactions 的 1 节点测试集群</summary>
+public sealed class TransactionalClusterFixture : IDisposable
+{
+    public TestCluster Cluster { get; }
 
-//             if (ConfigHelper.TransactionalDefaultAppConfig.SellerViewPostgres)
-//             {
-//                 hostBuilder.Services.AddDbContextFactory<SellerDbContext>();
-//                 hostBuilder.Services.AddSingleton<IShipmentService, CustomShipmentServiceImpl>();
-//             } else
-//             {
-//                 hostBuilder.Services.AddSingleton<IShipmentService, DefaultShipmentServiceImpl>();
-//             }
-
-//             if (ConfigHelper.TransactionalDefaultAppConfig.StreamReplication)
-//             {
-//                 hostBuilder.AddMemoryStreams(Constants.DefaultStreamProvider)
-//                             .AddMemoryGrainStorage(Constants.DefaultStreamStorage);
-//             }
+    /*────────── 内存事务存储 + 日志──────────*/
+    private sealed class SiloCfg : ISiloConfigurator
+    {
+        public void Configure(ISiloBuilder silo)
+        {
+            silo.ConfigureServices(services =>
+            {
+                services.AddLogging(lb =>
+                {
+                    lb.ClearProviders();
+                    lb.AddConsole();
+                    lb.SetMinimumLevel(LogLevel.Warning);
+                });
+            });
             
-//             if (ConfigHelper.TransactionalDefaultAppConfig.RedisReplication)
-//             {
-//                 hostBuilder.Services.AddSingleton<IRedisConnectionFactory>(new RedisConnectionFactoryImpl(ConfigHelper.TransactionalDefaultAppConfig.RedisPrimaryConnectionString, ConfigHelper.TransactionalDefaultAppConfig.RedisSecondaryConnectionString));
-//             } else
-//             {
-//                 hostBuilder.Services.AddSingleton<IRedisConnectionFactory>(new EtcNullConnectionFactoryImpl());
-//             }
+            /* Orleans 内存事务：状态 + 事务日志 */
+            silo.UseTransactions();               // 必须！启用事务功能
+            
 
-//             if (ConfigHelper.TransactionalDefaultAppConfig.OrleansTransactions)
-//             {
-//                 hostBuilder.UseTransactions();
-//                 if (ConfigHelper.TransactionalDefaultAppConfig.AdoNetGrainStorage) { 
+            /* 其他通用注册 —— OrleansStorage / Json 序列化 */
+            silo.AddMemoryGrainStorage(Constants.OrleansStorage);
 
-//                     hostBuilder.AddAdoNetGrainStorage(Constants.OrleansStorage, options =>
-//                     {
-//                         options.Invariant = "Npgsql";
-//                         options.ConnectionString = ConfigHelper.PostgresConnectionString;
-//                     });
-//                 }
-//                 else
-//                 {
-//                     hostBuilder.AddMemoryGrainStorage(Constants.OrleansStorage);
-//                 }
-//             }
+            silo.Services.AddSerializer(cfg =>
+                cfg.AddNewtonsoftJsonSerializer(t =>
+                    t.Namespace?.StartsWith("OnlineMarket") == true));
 
-//             hostBuilder.Services.AddSerializer(ser => { ser.AddNewtonsoftJsonSerializer(isSupported: type => type.Namespace.StartsWith("Common") || type.Namespace.StartsWith("OrleansApp.Abstract")); })
-//              .AddSingleton(ConfigHelper.TransactionalDefaultAppConfig);
+            /* AuditLog – 这里用 Null 实现即可 */
+            silo.Services.AddSingleton<IAuditLogger, EtcNullPersistence>();
+        }
+    }
 
-//             if (ConfigHelper.TransactionalDefaultAppConfig.LogRecords)
-//             {
-//                 hostBuilder.Services.AddSingleton<IAuditLogger, PostgresAuditLogger>();
-//             }
-//             else
-//             {
-//                 hostBuilder.Services.AddSingleton<IAuditLogger, EtcNullPersistence>();
-//             }
-//         }
-//     }
+    private sealed class ClientCfg : IClientBuilderConfigurator
+    {
+        public void Configure(IConfiguration _, IClientBuilder client)
+        {
+            client.ConfigureServices(services =>
+            {
+                services.AddLogging(lb =>
+                {
+                    lb.ClearProviders();
+                    lb.AddConsole();
+                    lb.SetMinimumLevel(LogLevel.Warning);
+                });
+            });
 
-//     private class ClientConfigurator : IClientBuilderConfigurator
-//     {
-//         public void Configure(IConfiguration configuration, IClientBuilder clientBuilder)
-//         {
-//             clientBuilder
-//                 .Services.AddSerializer(ser =>
-//                  {
-//                      ser.AddNewtonsoftJsonSerializer(isSupported: type => type.Namespace.StartsWith("Common") || type.Namespace.StartsWith("OrleansApp.Abstract"));
-//                  })
-//                 .AddSingleton(ConfigHelper.TransactionalDefaultAppConfig);
+            client.Services.AddSerializer(cfg =>
+                cfg.AddNewtonsoftJsonSerializer(t =>
+                    t.Namespace?.StartsWith("OnlineMarket") == true));
+        }
+    }
 
-//             if (ConfigHelper.TransactionalDefaultAppConfig.LogRecords)
-//                 clientBuilder.Services.AddSingleton<IAuditLogger, PostgresAuditLogger>();
-//             else
-//                 clientBuilder.Services.AddSingleton<IAuditLogger, EtcNullPersistence>();
+    public TransactionalClusterFixture()
+    {
+        var builder = new TestClusterBuilder(1);
+        builder.AddSiloBuilderConfigurator<SiloCfg>();
+        builder.AddClientBuilderConfigurator<ClientCfg>();
 
-//             // for tests
-//             if (ConfigHelper.TransactionalDefaultAppConfig.SellerViewPostgres)
-//             {
-//                 clientBuilder.Services.AddDbContextFactory<SellerDbContext>();
-//                 clientBuilder.Services.AddSingleton<IShipmentService, CustomShipmentServiceImpl>();
-//             } else
-//             {
-//                  clientBuilder.Services.AddSingleton<IShipmentService, DefaultShipmentServiceImpl>();
-//             }
-//         }
-//     }
+        Cluster = builder.Build();
+        Cluster.Deploy();
+    }
 
-//     public TransactionalClusterFixture()
-//     {
-//         var builder = new TestClusterBuilder(1);
-//         builder.AddSiloBuilderConfigurator<SiloConfigurator>();
-//         builder.AddClientBuilderConfigurator<ClientConfigurator>();
-//         this.Cluster = builder.Build();
-//         this.Cluster.Deploy();
-//     }
+    public void Dispose() => Cluster.StopAllSilos();
+}
 
-//     public void Dispose()
-//     {
-//         this.Cluster.StopAllSilos();
-//     }
-
-// }
-
+/* xUnit Collection tag */
+[CollectionDefinition(Name)]
+public class TransactionalClusterCollection
+    : ICollectionFixture<TransactionalClusterFixture>
+{
+    public const string Name = "txn‑cluster";
+}

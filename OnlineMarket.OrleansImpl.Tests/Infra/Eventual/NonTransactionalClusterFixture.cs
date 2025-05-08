@@ -36,7 +36,9 @@ public class NonTransactionalClusterFixture : IDisposable
                             .AddMemoryGrainStorage(Constants.DefaultStreamStorage);
             }
 
-            hostBuilder.Services.AddSerializer(ser => { ser.AddNewtonsoftJsonSerializer(isSupported: type => type.Namespace.StartsWith("OnlineMarket.Core.Common") || type.Namespace.StartsWith("OnlineMarket.OrleansImpl")); })
+            hostBuilder.Services.AddSerializer(ser => { ser.AddNewtonsoftJsonSerializer(isSupported: type => 
+                    type.Namespace.StartsWith("OnlineMarket.Core.Common") || 
+                    type.Namespace.StartsWith("OnlineMarket.OrleansImpl")); })
              .AddSingleton(ConfigHelper.NonTransactionalDefaultAppConfig);
 
             // the non transactional grains need grain storage for persistent state on constructor
@@ -78,6 +80,7 @@ public class NonTransactionalClusterFixture : IDisposable
         var builder = new TestClusterBuilder(1);
         builder.AddSiloBuilderConfigurator<SiloConfigurator>();
         builder.AddClientBuilderConfigurator<ClientConfigurator>();
+        //in-memory
         builder.AddSiloBuilderConfigurator<SellerViewTestSiloConfigurator>(); // ★ 加这一行
         Cluster = builder.Build();
         Cluster.Deploy();
