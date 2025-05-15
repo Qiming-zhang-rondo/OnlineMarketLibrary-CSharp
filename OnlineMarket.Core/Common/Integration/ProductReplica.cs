@@ -4,6 +4,8 @@
 // store in redis, use as a cache in cart
 public sealed class ProductReplica
 {
+    public ProductReplica() { }
+    
     public ProductReplica(string key, string version, float price)
     {
         this.Key = key;

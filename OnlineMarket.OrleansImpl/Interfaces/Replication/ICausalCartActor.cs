@@ -10,6 +10,6 @@ namespace OnlineMarket.OrleansImpl.Interfaces.Replication
 
     public interface ICausalCartActor : ICartActor
     {
-        Task<ProductReplica> GetReplicaItem(int sellerId, int productId);
+        Task<ProductReplica?> GetReplicaItem(int sellerId, int productId);
     }
 }

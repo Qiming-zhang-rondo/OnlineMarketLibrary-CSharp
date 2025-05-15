@@ -8,22 +8,10 @@ namespace OnlineMarket.OrleansImpl.Infra.Adapter
 {
     public sealed class CompositeReplicationPublisher : IReplicationPublisher
     {
-        private readonly IReplicationPublisher _a, _b;
-        public CompositeReplicationPublisher(IReplicationPublisher a, IReplicationPublisher b)
-        {
-            _a = a; _b = b;
-        }
+        private readonly IReplicationPublisher[] _inner;
+        public CompositeReplicationPublisher(params IReplicationPublisher[] inner) => _inner = inner;
 
-        public async Task PublishAsync(Product p)
-        {
-            await _a.PublishAsync(p);
-            await _b.PublishAsync(p);
-        }
-
-        public async Task SaveSnapshotAsync(Product p)
-        {
-            await _a.SaveSnapshotAsync(p);
-            await _b.SaveSnapshotAsync(p);
-        }
+        public Task PublishAsync(Product p)      => Task.WhenAll(_inner.Select(i => i.PublishAsync(p)));
+        public Task SaveSnapshotAsync(Product p) => Task.WhenAll(_inner.Select(i => i.SaveSnapshotAsync(p)));
     }
 }
