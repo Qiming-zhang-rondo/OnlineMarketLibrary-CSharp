@@ -107,25 +107,79 @@ public sealed class ShipmentServiceCore : IShipmentService
         }).ToList();
     }
 
-    private async Task DoUpdate(Dictionary<int,int> oldest, string tid)
+    // private async Task DoUpdate(Dictionary<int,int> oldest, string tid)
+    // {
+    //     DateTime now = _clock.UtcNow;
+    //     foreach (var (sellerId, shipmentId) in oldest)
+    //     {
+    //         var (ship, pkgs) = await _repo.LoadAsync(shipmentId);
+
+    //         var sellerPkgs   = pkgs.Where(p => p.seller_id == sellerId).ToList();
+    //         int deliveredCnt = pkgs.Count(p => p.status == PackageStatus.delivered);
+
+    //         foreach (var pkg in sellerPkgs)
+    //         {
+    //             pkg.status        = PackageStatus.delivered;
+    //             pkg.delivery_date = now;
+
+    //             var dn = new DeliveryNotification(
+    //                         ship.customer_id, pkg.order_id, pkg.package_id,
+    //                         pkg.seller_id, pkg.product_id, pkg.product_name,
+    //                         PackageStatus.delivered, now, tid);
+
+    //             await _sellerNtfy.NotifyDelivery(dn);
+    //         }
+
+    //         if (ship.status == ShipmentStatus.approved)
+    //         {
+    //             ship.status = ShipmentStatus.delivery_in_progress;
+    //             await _orderNtfy.NotifyShipment(
+    //                 new ShipmentNotification(ship.customer_id, ship.order_id,
+    //                                          now, tid, ship.status, sellerId: 0));
+    //         }
+
+    //         if (ship.package_count == deliveredCnt + sellerPkgs.Count)
+    //         {
+    //             ship.status = ShipmentStatus.concluded;
+
+    //             await _orderNtfy.NotifyShipment(
+    //                 new ShipmentNotification(ship.customer_id, ship.order_id,
+    //                                          now, tid, ship.status, sellerId: 0));
+
+    //             // 审计日志
+    //             // await _audit.WriteAsync("ShipmentActor",
+    //             //          $"{ship.customer_id}-{ship.order_id}",
+    //             //          JsonSerializer.Serialize(new { ship, pkgs }));
+
+    //             await _repo.DeleteAsync(shipmentId);
+    //             continue;     
+    //         }
+
+    //         await _repo.SaveAsync(shipmentId, ship, pkgs);
+    //     }
+    // }
+
+    private async Task DoUpdate(Dictionary<int, int> oldest, string tid)
+{
+    DateTime now = _clock.UtcNow;
+    foreach (var (sellerId, shipmentId) in oldest)
     {
-        DateTime now = _clock.UtcNow;
-        foreach (var (sellerId, shipmentId) in oldest)
+        try
         {
             var (ship, pkgs) = await _repo.LoadAsync(shipmentId);
 
-            var sellerPkgs   = pkgs.Where(p => p.seller_id == sellerId).ToList();
+            var sellerPkgs = pkgs.Where(p => p.seller_id == sellerId).ToList();
             int deliveredCnt = pkgs.Count(p => p.status == PackageStatus.delivered);
 
             foreach (var pkg in sellerPkgs)
             {
-                pkg.status        = PackageStatus.delivered;
+                pkg.status = PackageStatus.delivered;
                 pkg.delivery_date = now;
 
                 var dn = new DeliveryNotification(
-                            ship.customer_id, pkg.order_id, pkg.package_id,
-                            pkg.seller_id, pkg.product_id, pkg.product_name,
-                            PackageStatus.delivered, now, tid);
+                    ship.customer_id, pkg.order_id, pkg.package_id,
+                    pkg.seller_id, pkg.product_id, pkg.product_name,
+                    PackageStatus.delivered, now, tid);
 
                 await _sellerNtfy.NotifyDelivery(dn);
             }
@@ -135,7 +189,7 @@ public sealed class ShipmentServiceCore : IShipmentService
                 ship.status = ShipmentStatus.delivery_in_progress;
                 await _orderNtfy.NotifyShipment(
                     new ShipmentNotification(ship.customer_id, ship.order_id,
-                                             now, tid, ship.status, sellerId: 0));
+                                             now, tid, ship.status, 0));
             }
 
             if (ship.package_count == deliveredCnt + sellerPkgs.Count)
@@ -144,18 +198,18 @@ public sealed class ShipmentServiceCore : IShipmentService
 
                 await _orderNtfy.NotifyShipment(
                     new ShipmentNotification(ship.customer_id, ship.order_id,
-                                             now, tid, ship.status, sellerId: 0));
-
-                // 审计日志
-                // await _audit.WriteAsync("ShipmentActor",
-                //          $"{ship.customer_id}-{ship.order_id}",
-                //          JsonSerializer.Serialize(new { ship, pkgs }));
+                                             now, tid, ship.status, 0));
 
                 await _repo.DeleteAsync(shipmentId);
-                continue;     
+                continue;
             }
 
             await _repo.SaveAsync(shipmentId, ship, pkgs);
         }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Error in DoUpdate for shipmentId={ShipmentId}, sellerId={SellerId}, tid={Tid}: {Message}", shipmentId, sellerId, tid, ex.Message);
+        }
     }
+}
 }

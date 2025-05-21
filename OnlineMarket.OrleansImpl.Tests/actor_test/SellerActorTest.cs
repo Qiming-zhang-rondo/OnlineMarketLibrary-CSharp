@@ -11,7 +11,8 @@ using OnlineMarket.OrleansImpl.Infra;
 using OnlineMarket.OrleansImpl.Tests.Infra.Eventual;
 using Orleans.Storage;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection; // GetRequiredServiceByName<>
+using Microsoft.Extensions.DependencyInjection;
+using Xunit; // GetRequiredServiceByName<>
 // [assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace OnlineMarket.OrleansImpl.Tests.actor_test
 {

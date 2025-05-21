@@ -1,68 +1,49 @@
-﻿// using OnlineMarket.Core.Common.Entities;
-// using System.Net;
-// using Microsoft.AspNetCore.Mvc;
-// using OrleansApp.Interfaces;
-// using OnlineMarket.Core.Common.Integration;
-// using Orleans.Interfaces.SellerView;
-// using OnlineMarket.Core.Common.Config;
+﻿using System.Net;
+using OnlineMarket.Core.Common.Entities;
+using Microsoft.AspNetCore.Mvc;
+using OnlineMarket.OrleansImpl.Interfaces;
+using OnlineMarket.Core.Common.Integration;
 
-// namespace Silo.Controllers;
+namespace Silo.Controllers;
 
-// [ApiController]
-// public sealed class SellerController : ControllerBase
-// {
+[ApiController]
+public sealed class SellerController : ControllerBase
+{
+    private readonly ILogger<SellerController> logger;
 
-// 	private readonly ILogger<SellerController> logger;
+    public SellerController(ILogger<SellerController> logger)
+    {
+        this.logger = logger;
+    }
 
-//     private delegate ISellerActor GetSellerActorDelegate(IGrainFactory grains, int sellerId);
-//     private readonly GetSellerActorDelegate callback;
+    [HttpPost]
+    [Route("/seller")]
+    [ProducesResponseType((int)HttpStatusCode.Created)]
+    public async Task<ActionResult> SetSeller([FromServices] IGrainFactory grains, [FromBody] Seller seller)
+    {
+        logger.LogDebug("[SetSeller] received for id {0}", seller.id);
+        var actor = grains.GetGrain<ISellerActor>(seller.id);
+        await actor.SetSeller(seller);
+        return StatusCode((int)HttpStatusCode.Created);
+    }
 
-//     public SellerController(AppConfig config, ILogger<SellerController> logger)
-//     {
-//         this.logger = logger;
-//         this.callback = config.SellerViewPostgres ? GetSellerViewActor : GetSellerActor;
-//     }
+    [HttpGet]
+    [Route("/seller/dashboard/{sellerId}")]
+    [ProducesResponseType(typeof(SellerDashboard), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<SellerDashboard>> GetDashboard([FromServices] IGrainFactory grains, int sellerId)
+    {
+        var actor = grains.GetGrain<ISellerActor>(sellerId);
+        var dash = await actor.QueryDashboard();
+        return Ok(dash);
+    }
 
-//     private ISellerActor GetSellerActor(IGrainFactory grains, int sellerId)
-//     {
-//         return grains.GetGrain<ISellerActor>(sellerId);
-//     }
-
-//     private ISellerViewActor GetSellerViewActor(IGrainFactory grains, int sellerId)
-//     {
-//         return grains.GetGrain<ISellerViewActor>(sellerId);
-//     }
-
-//     [HttpPost]
-//     [Route("/seller")]
-//     [ProducesResponseType((int)HttpStatusCode.Created)]
-//     public async Task<ActionResult> SetSeller([FromServices] IGrainFactory grains, [FromBody] Seller seller)
-//     {
-//         this.logger.LogDebug("[SetSeller] received for id {0}", seller.id);
-//         var actor = this.callback(grains, seller.id);
-//         await actor.SetSeller(seller);
-//         return StatusCode((int)HttpStatusCode.Created);
-//     }
-
-//     [HttpGet]
-//     [Route("/seller/dashboard/{sellerId}")]
-//     [ProducesResponseType(typeof(SellerDashboard),(int)HttpStatusCode.OK)]
-//     public async Task<ActionResult<SellerDashboard>> GetDashboard([FromServices] IGrainFactory grains, int sellerId)
-//     {
-//         var actor = this.callback(grains, sellerId);
-//         var dash = await actor.QueryDashboard();
-//         return Ok(dash);
-//     }
-
-//     [HttpGet]
-//     [Route("/seller/{sellerId}")]
-//     [ProducesResponseType(typeof(Seller),(int)HttpStatusCode.OK)]
-//     public async Task<ActionResult<Seller>> GetSeller([FromServices] IGrainFactory grains, int sellerId)
-//     {
-//         var actor = this.callback(grains, sellerId);
-//         var Seller = await actor.GetSeller();
-//         return Ok(Seller);
-//     }
-
-// }
-
+    [HttpGet]
+    [Route("/seller/{sellerId}")]
+    [ProducesResponseType(typeof(Seller), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<Seller>> GetSeller([FromServices] IGrainFactory grains, int sellerId)
+    {
+        var actor = grains.GetGrain<ISellerActor>(sellerId);
+        var seller = await actor.GetSeller();
+        return Ok(seller);
+    }
+}

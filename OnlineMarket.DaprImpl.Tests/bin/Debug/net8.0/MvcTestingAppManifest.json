@@ -1,0 +1,5 @@
+{
+  "CartMS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/qiming\/OnlineMarketLibrary-CSharp\/OnlineMarket.DaprImpl\/CartMS",
+  "OnlineMarket.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/qiming\/OnlineMarketLibrary-CSharp\/OnlineMarket.Core",
+  "ProductMS, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/Users\/qiming\/OnlineMarketLibrary-CSharp\/OnlineMarket.DaprImpl\/ProductMS"
+}

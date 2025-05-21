@@ -1,0 +1,344 @@
+﻿[2025-05-08 18:26:39.239 GMT 13	Warning	100405	Orleans.Runtime.Silo]	Note: Silo not running with ServerGC turned on - recommend checking app config : <configuration>-<runtime>-<gcServer enabled="true">	
+[2025-05-08 18:26:39.240 GMT 13	Warning	100405	Orleans.Runtime.Silo]	Note: ServerGC only kicks in on multi-core systems (settings enabling ServerGC have no effect on single-core machines).	
+[2025-05-08 18:26:39.695 GMT 5	Warning	0	Orleans.Storage.MemoryStorageGrain]	Etag mismatch during Update for grain orderEntries/selleractor/5B: Expected = ffe53468bc7b4065be318aca4c52949f Received = (null)	
+[2025-05-08 18:26:39.696 GMT 5	Warning	0	Orleans.Storage.MemoryStorageGrain]	Etag mismatch during Update for grain orderEntries/selleractor/5B: Expected = ffe53468bc7b4065be318aca4c52949f Received = (null)	
+[2025-05-08 18:26:39.696 GMT 27	Warning	0	Orleans.Storage.MemoryStorageGrain]	Etag mismatch during Update for grain orderEntries/selleractor/5B: Expected = ffe53468bc7b4065be318aca4c52949f Received = (null)	
+[2025-05-08 18:26:39.700 GMT 13	Error	102203	Orleans.Storage.MemoryGrainStorage]	!!!!!!!!!! Error from storage provider MemoryGrainStorage.orderEntries during WriteStateAsync for grain selleractor/5B(null)	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = ffe53468bc7b4065be318aca4c52949f Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:39.702 GMT 13	Warning	100322	Orleans.Grain.InvokeException]	Exception during Grain method call of message OneWay [S127.0.0.1:25180:105733599 paymentactor/FA1]->[S127.0.0.1:25180:105733599 selleractor/5B] OnlineMarket.OrleansImpl.Interfaces.ISellerActor[(OnlineMarket.OrleansImpl.Interfaces.ISellerActor)OnlineMarket.OrleansImpl.Grains.SellerActor].ProcessNewInvoice(OnlineMarket.Core.Common.Events.InvoiceIssued) #86: 	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = ffe53468bc7b4065be318aca4c52949f Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+   at Orleans.Core.StateStorageBridge`1.OnError(Exception exception, ErrorCode id, String operation) in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 171
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 96
+   at OnlineMarket.Core.Services.SellerServiceCore.ProcessNewInvoice(InvoiceIssued invoice) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/Services/SellerServiceCore.cs:line 75
+   at Orleans.Runtime.TaskRequest.CompleteInvokeAsync(Task resultTask) in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 761
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:39.704 GMT 13	Error	102203	Orleans.Storage.MemoryGrainStorage]	!!!!!!!!!! Error from storage provider MemoryGrainStorage.orderEntries during WriteStateAsync for grain selleractor/5B(null)	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = ffe53468bc7b4065be318aca4c52949f Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:39.704 GMT 13	Warning	100322	Orleans.Grain.InvokeException]	Exception during Grain method call of message OneWay [S127.0.0.1:25180:105733599 paymentactor/FA1]->[S127.0.0.1:25180:105733599 selleractor/5B] OnlineMarket.OrleansImpl.Interfaces.ISellerActor[(OnlineMarket.OrleansImpl.Interfaces.ISellerActor)OnlineMarket.OrleansImpl.Grains.SellerActor].ProcessPaymentConfirmed(OnlineMarket.Core.Common.Events.PaymentConfirmed) #87: 	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = ffe53468bc7b4065be318aca4c52949f Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+   at Orleans.Core.StateStorageBridge`1.OnError(Exception exception, ErrorCode id, String operation) in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 171
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 96
+   at OnlineMarket.Core.Services.SellerServiceCore.ProcessPaymentConfirmed(PaymentConfirmed evt) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/Services/SellerServiceCore.cs:line 85
+   at Orleans.Runtime.TaskRequest.CompleteInvokeAsync(Task resultTask) in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 761
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:39.704 GMT 13	Error	102203	Orleans.Storage.MemoryGrainStorage]	!!!!!!!!!! Error from storage provider MemoryGrainStorage.orderEntries during WriteStateAsync for grain selleractor/5B(null)	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = ffe53468bc7b4065be318aca4c52949f Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:39.705 GMT 13	Warning	100322	Orleans.Grain.InvokeException]	Exception during Grain method call of message OneWay [S127.0.0.1:25180:105733599 shipmentactor/0]->[S127.0.0.1:25180:105733599 selleractor/5B] OnlineMarket.OrleansImpl.Interfaces.ISellerActor[(OnlineMarket.OrleansImpl.Interfaces.ISellerActor)OnlineMarket.OrleansImpl.Grains.SellerActor].ProcessShipmentNotification(ShipmentNotification { CustomerId = 4001, OrderId = 1, EventDate = 5/8/2025 6:26:39 PM, InstanceId = f80b43be-8900-4a65-90e6-6ab31687d904, Status = approved, SellerId = 91 }) #98: 	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = ffe53468bc7b4065be318aca4c52949f Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+   at Orleans.Core.StateStorageBridge`1.OnError(Exception exception, ErrorCode id, String operation) in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 171
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 96
+   at OnlineMarket.Core.Services.SellerServiceCore.ProcessShipmentNotification(ShipmentNotification sn) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/Services/SellerServiceCore.cs:line 132
+   at Orleans.Runtime.TaskRequest.CompleteInvokeAsync(Task resultTask) in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 761
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:40.192 GMT 15	Warning	0	Orleans.Storage.MemoryStorageGrain]	Etag mismatch during Update for grain orderEntries/selleractor/34: Expected = c42e47f93e8643f7a4890c899c680bfc Received = (null)	
+[2025-05-08 18:26:40.197 GMT 5	Error	102203	Orleans.Storage.MemoryGrainStorage]	!!!!!!!!!! Error from storage provider MemoryGrainStorage.orderEntries during WriteStateAsync for grain selleractor/34(null)	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = c42e47f93e8643f7a4890c899c680bfc Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:40.197 GMT 5	Warning	100322	Orleans.Grain.InvokeException]	Exception during Grain method call of message OneWay [S127.0.0.1:25180:105733599 sys.client/a223720ab3fe4203a83546ae6e3a433c]->[S127.0.0.1:25180:105733599 selleractor/34] OnlineMarket.OrleansImpl.Interfaces.ISellerActor[(OnlineMarket.OrleansImpl.Interfaces.ISellerActor)OnlineMarket.OrleansImpl.Grains.SellerActor].ProcessPaymentConfirmed(OnlineMarket.Core.Common.Events.PaymentConfirmed) #188: 	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = c42e47f93e8643f7a4890c899c680bfc Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+   at Orleans.Core.StateStorageBridge`1.OnError(Exception exception, ErrorCode id, String operation) in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 171
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 96
+   at OnlineMarket.Core.Services.SellerServiceCore.ProcessPaymentConfirmed(PaymentConfirmed evt) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/Services/SellerServiceCore.cs:line 85
+   at Orleans.Runtime.TaskRequest.CompleteInvokeAsync(Task resultTask) in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 761
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:44.230 GMT 5	Warning	0	Orleans.Storage.MemoryStorageGrain]	Etag mismatch during Update for grain orderEntries/selleractor/3C: Expected = 0515a2df0268421dbf0d2d58b1f1b912 Received = (null)	
+[2025-05-08 18:26:44.231 GMT 13	Error	102203	Orleans.Storage.MemoryGrainStorage]	!!!!!!!!!! Error from storage provider MemoryGrainStorage.orderEntries during WriteStateAsync for grain selleractor/3C(null)	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = 0515a2df0268421dbf0d2d58b1f1b912 Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:44.232 GMT 13	Warning	100322	Orleans.Grain.InvokeException]	Exception during Grain method call of message OneWay [S127.0.0.1:25180:105733599 sys.client/a223720ab3fe4203a83546ae6e3a433c]->[S127.0.0.1:25180:105733599 selleractor/3C] OnlineMarket.OrleansImpl.Interfaces.ISellerActor[(OnlineMarket.OrleansImpl.Interfaces.ISellerActor)OnlineMarket.OrleansImpl.Grains.SellerActor].ProcessShipmentNotification(ShipmentNotification { CustomerId = 4, OrderId = 1004, EventDate = 5/8/2025 6:26:44 PM, InstanceId = b860237c-0fcf-4354-bbe7-062de03f0e27, Status = approved, SellerId = 60 }) #240: 	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = 0515a2df0268421dbf0d2d58b1f1b912 Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+   at Orleans.Core.StateStorageBridge`1.OnError(Exception exception, ErrorCode id, String operation) in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 171
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 96
+   at OnlineMarket.Core.Services.SellerServiceCore.ProcessShipmentNotification(ShipmentNotification sn) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/Services/SellerServiceCore.cs:line 132
+   at Orleans.Runtime.TaskRequest.CompleteInvokeAsync(Task resultTask) in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 761
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:47.260 GMT 27	Warning	0	Orleans.Storage.MemoryStorageGrain]	Etag mismatch during Update for grain orderEntries/selleractor/38: Expected = ca89c086c0e543588b303607ebc29ad3 Received = (null)	
+[2025-05-08 18:26:47.260 GMT 13	Error	102203	Orleans.Storage.MemoryGrainStorage]	!!!!!!!!!! Error from storage provider MemoryGrainStorage.orderEntries during WriteStateAsync for grain selleractor/38(null)	
+Exc level 0: Orleans.Storage.InconsistentStateException: e-Tag mismatch in Memory Storage. Stored = ca89c086c0e543588b303607ebc29ad3 Received = 
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 106
+   at Orleans.Core.StateStorageBridge`1.WriteStateAsync() in /_/src/Orleans.Runtime/Storage/StateStorageBridge.cs:line 90
+Exc level 1: Orleans.Storage.Internal.MemoryStorageEtagMismatchException: Exception of type 'Orleans.Storage.Internal.MemoryStorageEtagMismatchException' was thrown.
+   at Orleans.Storage.MemoryStorageGrain.ValidateEtag(String currentETag, String receivedEtag, String grainStoreKey, String operation) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 91
+   at Orleans.Storage.MemoryStorageGrain.WriteStateAsync[T](String grainStoreKey, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorageGrain.cs:line 35
+   at OrleansCodeGen.Orleans.Storage.Invokable_IMemoryStorageGrain_GrainReference_7CC6CA25_1`1.InvokeInner() in /_/src/Orleans.Core/Orleans.CodeGenerator/Orleans.CodeGenerator.OrleansSerializationSourceGenerator/Orleans.Core.orleans.g.cs:line 5227
+   at Orleans.Runtime.TaskRequest`1.Invoke() in /_/src/Orleans.Core.Abstractions/Runtime/GrainReference.cs:line 691
+--- End of stack trace from previous location ---
+   at Orleans.Serialization.Invocation.ResponseCompletionSource`1.GetResult(Int16 token) in /_/src/Orleans.Serialization/Invocation/ResponseCompletionSource.cs:line 230
+   at System.Threading.Tasks.ValueTask`1.ValueTaskSourceAsTask.<>c.<.cctor>b__4_0(Object state)
+--- End of stack trace from previous location ---
+   at Orleans.Storage.MemoryGrainStorage.WriteStateAsync[T](String grainType, GrainId grainId, IGrainState`1 grainState) in /_/src/Orleans.Persistence.Memory/Storage/MemoryStorage.cs:line 101
+[2025-05-08 18:26:49.438 GMT 27	Error	100513	Orleans.Grain]	!!!!!!!!!! Error activating grain [Activation: S127.0.0.1:25180:105733599/sellerviewactor/1B5A@399ab1f2bf2c4492a7394396fa5c2bd4#GrainType=OnlineMarket.OrleansImpl.Grains.SellerViewActor,OnlineMarket.OrleansImpl Placement=RandomPlacement State=Activating]	
+Exc level 0: System.TypeLoadException: Could not load type 'Npgsql.Internal.TypeMapping.IUserEnumTypeMapping' from assembly 'Npgsql, Version=8.0.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7'.
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlTypeMappingSource.SetupEnumMappings(ISqlGenerationHelper sqlGenerationHelper, NpgsqlDataSource dataSource)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlTypeMappingSource.LoadUserDefinedTypeMappings(ISqlGenerationHelper sqlGenerationHelper, NpgsqlDataSource dataSource)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlTypeMappingSource..ctor(TypeMappingSourceDependencies dependencies, RelationalTypeMappingSourceDependencies relationalDependencies, ISqlGenerationHelper sqlGenerationHelper, INpgsqlSingletonOptions options)
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeDirectByRefWithFewArgs(Object obj, Span`1 copyOfArgs, BindingFlags invokeAttr)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.<>c.<AddEntityFrameworkNpgsql>b__1_1(IServiceProvider p)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.get_ContextServices()
+   at Microsoft.EntityFrameworkCore.DbContext.get_InternalServiceProvider()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Infrastructure.IInfrastructure<System.IServiceProvider>.get_Instance()
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.InfrastructureExtensions.GetService[TService](IInfrastructure`1 accessor)
+   at Microsoft.EntityFrameworkCore.Infrastructure.AccessorExtensions.GetService[TService](IInfrastructure`1 accessor)
+   at Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade.get_Dependencies()
+   at Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade.EnsureCreated()
+   at OnlineMarket.OrleansImpl.Grains.SellerViewActor.OnActivateAsync(CancellationToken _) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Grains/SellerViewActor.cs:line 50
+   at OnlineMarket.OrleansImpl.Grains.SellerViewActor.OnActivateAsync(CancellationToken _) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Grains/SellerViewActor.cs:line 61
+   at Orleans.Internal.OrleansTaskExtentions.WithCancellation(Task taskToComplete, String message, CancellationToken cancellationToken) in /_/src/Orleans.Core/Async/TaskExtensions.cs:line 145
+   at Orleans.Runtime.ActivationData.<ActivateAsync>g__CallActivateAsync|139_0(Dictionary`2 requestContextData, CancellationToken cancellationToken) in /_/src/Orleans.Runtime/Catalog/ActivationData.cs:line 1403
+[2025-05-08 18:26:49.453 GMT 27	Error	100513	Orleans.Grain]	!!!!!!!!!! Error activating grain [Activation: S127.0.0.1:25180:105733599/sellerviewactor/1B59@f7d71ba0d4744c068b0dd394bb7f8178#GrainType=OnlineMarket.OrleansImpl.Grains.SellerViewActor,OnlineMarket.OrleansImpl Placement=RandomPlacement State=Activating]	
+Exc level 0: System.TypeLoadException: Could not load type 'Npgsql.Internal.TypeMapping.IUserEnumTypeMapping' from assembly 'Npgsql, Version=8.0.0.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7'.
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlTypeMappingSource.SetupEnumMappings(ISqlGenerationHelper sqlGenerationHelper, NpgsqlDataSource dataSource)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlTypeMappingSource.LoadUserDefinedTypeMappings(ISqlGenerationHelper sqlGenerationHelper, NpgsqlDataSource dataSource)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlTypeMappingSource..ctor(TypeMappingSourceDependencies dependencies, RelationalTypeMappingSourceDependencies relationalDependencies, ISqlGenerationHelper sqlGenerationHelper, INpgsqlSingletonOptions options)
+   at InvokeStub_NpgsqlTypeMappingSource..ctor(Object, Span`1)
+   at System.Reflection.MethodBaseInvoker.InvokeWithFewArgs(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitRootCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.NpgsqlServiceCollectionExtensions.<>c.<AddEntityFrameworkNpgsql>b__1_1(IServiceProvider p)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitFactory(FactoryCallSite factoryCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitConstructor(ConstructorCallSite constructorCallSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSiteMain(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitCache(ServiceCallSite callSite, RuntimeResolverContext context, ServiceProviderEngineScope serviceProviderEngine, RuntimeResolverLock lockType)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.VisitScopeCache(ServiceCallSite callSite, RuntimeResolverContext context)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteVisitor`2.VisitCallSite(ServiceCallSite callSite, TArgument argument)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteRuntimeResolver.Resolve(ServiceCallSite callSite, ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.DynamicServiceProviderEngine.<>c__DisplayClass2_0.<RealizeService>b__0(ServiceProviderEngineScope scope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService(IServiceProvider provider, Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.GetRequiredService[T](IServiceProvider provider)
+   at Microsoft.EntityFrameworkCore.DbContext.get_DbContextDependencies()
+   at Microsoft.EntityFrameworkCore.DbContext.get_ContextServices()
+   at Microsoft.EntityFrameworkCore.DbContext.get_InternalServiceProvider()
+   at Microsoft.EntityFrameworkCore.DbContext.Microsoft.EntityFrameworkCore.Infrastructure.IInfrastructure<System.IServiceProvider>.get_Instance()
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.InfrastructureExtensions.GetService[TService](IInfrastructure`1 accessor)
+   at Microsoft.EntityFrameworkCore.Infrastructure.AccessorExtensions.GetService[TService](IInfrastructure`1 accessor)
+   at Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade.get_Dependencies()
+   at Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade.EnsureCreated()
+   at OnlineMarket.OrleansImpl.Grains.SellerViewActor.OnActivateAsync(CancellationToken _) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Grains/SellerViewActor.cs:line 50
+   at OnlineMarket.OrleansImpl.Grains.SellerViewActor.OnActivateAsync(CancellationToken _) in /Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.OrleansImpl/Grains/SellerViewActor.cs:line 61
+   at Orleans.Internal.OrleansTaskExtentions.WithCancellation(Task taskToComplete, String message, CancellationToken cancellationToken) in /_/src/Orleans.Core/Async/TaskExtensions.cs:line 145
+   at Orleans.Runtime.ActivationData.<ActivateAsync>g__CallActivateAsync|139_0(Dictionary`2 requestContextData, CancellationToken cancellationToken) in /_/src/Orleans.Runtime/Catalog/ActivationData.cs:line 1403
+[2025-05-08 18:26:54.715 GMT 5	Warning	0	OnlineMarket.Core.Services.StockServiceCore]	Stock 52:102 running out	

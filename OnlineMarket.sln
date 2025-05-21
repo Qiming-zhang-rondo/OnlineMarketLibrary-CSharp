@@ -13,6 +13,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineMarket.OrleansImpl.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Silo", "Silo\Silo.csproj", "{EDDB19BF-9D4A-4324-AF73-926336111981}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineMarket.DaprImpl.Tests", "OnlineMarket.DaprImpl.Tests\OnlineMarket.DaprImpl.Tests.csproj", "{059D9A98-2AD0-439B-B326-6BA9F6D1CECC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OnlineMarket.DaprImpl", "OnlineMarket.DaprImpl", "{2E8D784C-87B7-46E7-B851-7C0986DCDBC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartMS", "OnlineMarket.DaprImpl\CartMS\CartMS.csproj", "{472C8EB1-2F33-4451-A703-C9DDC5C8E89C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductMS", "OnlineMarket.DaprImpl\ProductMS\ProductMS.csproj", "{29904019-B27F-43C8-AD72-E57B70F892F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +50,21 @@ Global
 		{EDDB19BF-9D4A-4324-AF73-926336111981}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDDB19BF-9D4A-4324-AF73-926336111981}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDDB19BF-9D4A-4324-AF73-926336111981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{059D9A98-2AD0-439B-B326-6BA9F6D1CECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{059D9A98-2AD0-439B-B326-6BA9F6D1CECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{059D9A98-2AD0-439B-B326-6BA9F6D1CECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{059D9A98-2AD0-439B-B326-6BA9F6D1CECC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{472C8EB1-2F33-4451-A703-C9DDC5C8E89C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{472C8EB1-2F33-4451-A703-C9DDC5C8E89C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{472C8EB1-2F33-4451-A703-C9DDC5C8E89C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{472C8EB1-2F33-4451-A703-C9DDC5C8E89C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29904019-B27F-43C8-AD72-E57B70F892F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29904019-B27F-43C8-AD72-E57B70F892F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29904019-B27F-43C8-AD72-E57B70F892F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29904019-B27F-43C8-AD72-E57B70F892F5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{472C8EB1-2F33-4451-A703-C9DDC5C8E89C} = {2E8D784C-87B7-46E7-B851-7C0986DCDBC1}
+		{29904019-B27F-43C8-AD72-E57B70F892F5} = {2E8D784C-87B7-46E7-B851-7C0986DCDBC1}
 	EndGlobalSection
 EndGlobal

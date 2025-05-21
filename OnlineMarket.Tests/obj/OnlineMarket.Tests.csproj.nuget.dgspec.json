@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Tests\\OnlineMarket.Tests.csproj": {}
+    "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Tests/OnlineMarket.Tests.csproj": {}
   },
   "projects": {
-    "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj": {
+    "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj",
+        "projectUniqueName": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj",
         "projectName": "OnlineMarket.Core",
-        "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj",
-        "packagesPath": "C:\\Users\\f4848\\.nuget\\packages\\",
-        "outputPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\obj\\",
+        "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj",
+        "packagesPath": "/Users/qiming/.nuget/packages/",
+        "outputPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\f4848\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/qiming/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -36,9 +36,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -46,7 +45,11 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[9.0.4, )"
+              "version": "[7.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.11, )"
             },
             "Microsoft.Extensions.Logging.Abstractions": {
               "target": "Package",
@@ -55,6 +58,10 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[7.0.11, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
@@ -72,40 +79,26 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.11, 8.0.11]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.11, 8.0.11]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.11, 8.0.11]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\f4848\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Tests\\OnlineMarket.Tests.csproj": {
+    "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Tests/OnlineMarket.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Tests\\OnlineMarket.Tests.csproj",
+        "projectUniqueName": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Tests/OnlineMarket.Tests.csproj",
         "projectName": "OnlineMarket.Tests",
-        "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Tests\\OnlineMarket.Tests.csproj",
-        "packagesPath": "C:\\Users\\f4848\\.nuget\\packages\\",
-        "outputPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Tests\\obj\\",
+        "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Tests/OnlineMarket.Tests.csproj",
+        "packagesPath": "/Users/qiming/.nuget/packages/",
+        "outputPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\f4848\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/qiming/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -117,8 +110,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj": {
-                "projectPath": "C:\\毕设\\OnlineMarketLibrary-CSharp\\OnlineMarket.Core\\OnlineMarket.Core.csproj"
+              "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj": {
+                "projectPath": "/Users/qiming/OnlineMarketLibrary-CSharp/OnlineMarket.Core/OnlineMarket.Core.csproj"
               }
             }
           }
@@ -131,9 +124,8 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+          "auditMode": "direct"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -141,11 +133,19 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[9.0.4, )"
+              "version": "[7.0.11, )"
+            },
+            "Microsoft.EntityFrameworkCore.Abstractions": {
+              "target": "Package",
+              "version": "[7.0.11, )"
             },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[17.8.0, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[7.0.11, )"
             },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
@@ -175,26 +175,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.11, 8.0.11]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.11, 8.0.11]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.11, 8.0.11]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\f4848\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

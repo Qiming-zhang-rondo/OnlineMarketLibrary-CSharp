@@ -1,40 +1,28 @@
-// using System.Net;
-// using OnlineMarket.Core.Common.Config;
-// using Microsoft.AspNetCore.Mvc;
-// using OrleansApp.Interfaces;
-// using OrleansApp.Transactional;
+using System.Net;
+using OnlineMarket.Core.Common.Config;
+using Microsoft.AspNetCore.Mvc;
+using OnlineMarket.OrleansImpl.Interfaces; 
 
-// namespace Silo.Controllers;
+namespace Silo.Controllers;
 
-// [ApiController]
-// public sealed class OrderController : ControllerBase
-// {
-//     private readonly ILogger<OrderController> logger;
-//     private readonly GetOrderActorDelegate callback;
+[ApiController]
+public sealed class OrderController : ControllerBase
+{
+    private readonly ILogger<OrderController> logger;
 
-//     private delegate IOrderActor GetOrderActorDelegate(IGrainFactory grains, int customerId);
+    public OrderController(ILogger<OrderController> logger)
+    {
+        this.logger = logger;
+    }
 
-//     public OrderController(AppConfig config, ILogger<OrderController> logger)
-//     {
-//         this.logger = logger;
-//         this.callback = config.OrleansTransactions ? GetTransactionalOrderActor : GetOrderActor;
-//     }
-
-//     [HttpGet("/order/{customerId}")]
-//     [ProducesResponseType(typeof(IEnumerable<Common.Entities.Order>), (int)HttpStatusCode.OK)]
-//     public ActionResult<IEnumerable<Common.Entities.Order>> GetByCustomerId([FromServices] IGrainFactory grains, int customerId)
-//     {
-//         return Ok(this.callback(grains,customerId).GetOrders());
-//     }
-
-//     private IOrderActor GetOrderActor(IGrainFactory grains, int customerId)
-//     {
-//         return grains.GetGrain<IOrderActor>(customerId);
-//     }
-
-//     private ITransactionalOrderActor GetTransactionalOrderActor(IGrainFactory grains, int customerId)
-//     {
-//         return grains.GetGrain<ITransactionalOrderActor>(customerId);
-//     }
-
-// }
+    [HttpGet("/order/{customerId}")]
+    [ProducesResponseType(typeof(IEnumerable<OnlineMarket.Core.Common.Entities.Order>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<IEnumerable<OnlineMarket.Core.Common.Entities.Order>>> GetByCustomerId(
+        [FromServices] IGrainFactory grains,
+        int customerId)
+    {
+        var orderActor = grains.GetGrain<IOrderActor>(customerId);
+        var orders = await orderActor.GetOrders();
+        return Ok(orders);
+    }
+}
