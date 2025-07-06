@@ -3,14 +3,14 @@
 ## Table of Contents
 
 1. [RPC Style Core Library (C# Version)](#rpc-style-core-library-c-version)
-   - Design Objectives and RPC Style Characteristics
-   - Overall Architecture and Ports Abstraction
-   - Ports and Interface Definitions
-   - Core Service Components
+   - [Design Objectives and RPC Style Characteristics](#design-objectives-and-rpc-style-characteristics)
+   - [Overall Architecture and Ports Abstraction](#overall-architecture-and-ports-abstraction)
+   - [Ports and Interface Definitions](#ports-and-interface-definitions)
+   - [Core Service Components](#core-service-components)
 2. [Orleans-based RPC Core Library Implementation](#orleans-based-rpc-core-library-implementation)
-   - Actor and Core Connection Pattern
-   - Dependency Injection and Component Assembly
-   - Message Routing and Event Forwarding
+   - [Actor and Core Connection Pattern](#actor-and-core-connection-pattern)
+   - [Dependency Injection and Component Assembly](#dependency-injection-and-component-assembly)
+   - [Message Routing and Event Forwarding](#message-routing-and-event-forwarding)
 
 ---
 
@@ -90,6 +90,7 @@ public class OrderActor : Grain, IOrderActor {
 
     public Task NotifyCheckout(CustomerCheckout cc) => _svc.NotifyCheckoutAsync(cc);
 }
+```
 
 ### Dependency Injection and Component Assembly
 
@@ -103,6 +104,7 @@ var repo = new OrleansCartRepository(_state);
 var order = new OrderGrainGateway(GrainFactory);
 var clock = SystemClock.Instance;
 _svc = new CartServiceCore(id, repo, order, clock, _log, trackHistory);
+```
 
 ### Message Routing and Event Forwarding
 
@@ -117,6 +119,7 @@ public sealed class StockGrainNotifier : IStockNotifier {
         return grain.ProcessProductUpdate(evt);
     }
 }
+```
 
 #### Gateway:
 
@@ -127,3 +130,4 @@ public class OrderGrainGateway : IOrderGateway {
     public Task CheckoutAsync(ReserveStock rs) =>
         _gf.GetGrain<IOrderActor>(rs.customerCheckout.CustomerId).Checkout(rs);
 }
+```
