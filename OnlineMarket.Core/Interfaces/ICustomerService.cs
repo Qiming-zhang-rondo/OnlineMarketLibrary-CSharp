@@ -1,4 +1,5 @@
 ﻿// OnlineMarket.Core.Interfaces/ICustomerService.cs
+
 using System.Threading.Tasks;
 using OnlineMarket.Core.Common.Entities;
 using OnlineMarket.Core.Common.Events;
@@ -6,14 +7,14 @@ using OnlineMarket.Core.Common.Events;
 namespace OnlineMarket.Core.Interfaces
 {
     /// <summary>
-    /// Customer聚合根的领域服务接口——纯粹的业务契约。
+    /// Domain service interface of Customer aggregate root
     /// </summary>
     public interface ICustomerService
     {
-        /// <summary>写入（或替换）完整的 Customer 资料。</summary>
+        /// <summary>Write (or replace) the complete Customer data</summary>
         Task SetCustomer(Customer customer);
 
-        /// <summary>将所有统计数据清零并移除存储记录。</summary>
+        /// <summary>Clear</summary>
         Task Clear();
 
         /// <summary>读取当前快照。</summary>

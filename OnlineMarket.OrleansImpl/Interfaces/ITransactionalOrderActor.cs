@@ -9,7 +9,6 @@ using System.Transactions;
 
 namespace OnlineMarket.OrleansImpl.Interfaces;
 
-/// <summary>
 /// 支持 Orleans Transactions 的订单粒度
 /// </summary>
 public interface ITransactionalOrderActor : IOrderActor

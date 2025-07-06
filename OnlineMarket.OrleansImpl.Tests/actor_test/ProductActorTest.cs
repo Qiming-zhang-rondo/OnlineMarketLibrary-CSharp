@@ -14,8 +14,7 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
     public class ProductActorTest : BaseTest
     {
         public ProductActorTest(NonTransactionalClusterFixture f) : base(f.Cluster) { }
-
-        /*───────────── 辅助生成器 ─────────────*/
+        
         private static Product BuildProduct(int sid, int pid, float price = 10, string ver = "v1") =>
             new()
             {
@@ -27,8 +26,6 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
                 version    = ver,
                 active     = true
             };
-
-        /*────────────── 测 试 ──────────────*/
 
         [Fact]
         public async Task SetProduct_Should_Persist_State()

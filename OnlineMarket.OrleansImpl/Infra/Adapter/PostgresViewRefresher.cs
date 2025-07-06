@@ -4,7 +4,7 @@ using OnlineMarket.OrleansImpl.Infra.SellerDb;
 
 
 namespace OnlineMarket.OrleansImpl.Infra.Adapter;
-//物化视图刷新器
+//Materialized View Refresher
 
 public sealed class PostgresViewRefresher : IMaterializedViewRefresher
 {

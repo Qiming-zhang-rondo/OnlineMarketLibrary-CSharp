@@ -11,12 +11,11 @@ using OnlineMarket.Core.Ports;
 using OnlineMarket.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 
-/*──────────── 帮助对象 ────────*/
 file sealed class FakeClock : IClock { public DateTime UtcNow => DateTime.UtcNow; }
 
 public class OrderServiceCoreTest
 {
-    /*— 构造最小  ReserveStock —*/
+    /*— Minimal Construction ReserveStock —*/
     private ReserveStock RS(int cid,int oid,int sid)
     {
         var cart = new CartItem{
@@ -29,7 +28,7 @@ public class OrderServiceCoreTest
                    Guid.NewGuid().ToString());
     }
 
-    /*— 验证 BuildOrder/Checkout 调用 —*/
+    /*— Verify the BuildOrder/Checkout call —*/
     [Fact]
     public async Task Checkout_Should_Call_All_Ports_And_Save()
     {
@@ -60,7 +59,7 @@ public class OrderServiceCoreTest
         /*── 2) Act ──────────────────────*/
         await svc.Checkout(rs);
 
-        /*── 3) Assert 保存与调用 ─────────*/
+        /*── 3) Assert ─────────*/
         repo.Verify(r => r.SaveAsync(
                         1,
                         It.Is<Order>(o => o.status==OrderStatus.INVOICED),

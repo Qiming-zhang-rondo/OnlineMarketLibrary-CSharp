@@ -62,7 +62,7 @@ public sealed class CausalCartServiceCore : ICartService
 
     public async Task NotifyCheckoutAsync(CustomerCheckout cc)
     {
-        /* ① 结账前对每一行商品做因果一致性校验 */
+        /* ① Perform causal consistency check on each line of goods before checkout */
         foreach (var it in _cart.items)
         {
             var replica = await _replica.GetReplicaAsync(it.SellerId, it.ProductId);
@@ -81,10 +81,10 @@ public sealed class CausalCartServiceCore : ICartService
                     it.UnitPrice = replica.Price;
                 }
             }
-            // 版本不一致：允许使用旧价（商品被删除或换版）
+            // Version inconsistency: old price is allowed (product is deleted or changed)
         }
 
-        /* ② 正常进入结账流程 */
+        /* ② Enter the checkout process normally */
         _cart.status = CartStatus.CHECKOUT_SENT;
         if (_trackHistory)
             _hist.TryAdd(cc.instanceId, new(_cart.items));

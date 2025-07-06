@@ -8,9 +8,7 @@ using OnlineMarket.Core.Common.Entities;
 
 namespace OnlineMarket.OrleansImpl.Infra.Adapter
 {
-    /// <summary>
-    /// 把通知转发给传统 SellerActor。
-    /// </summary>
+    // Forwards notifications to the legacy SellerActor
     public sealed class SellerGrainNotifier : ISellerNotifier
     {
         private readonly IGrainFactory _factory;
@@ -20,7 +18,7 @@ namespace OnlineMarket.OrleansImpl.Infra.Adapter
 
         public Task NotifyShipment(ShipmentNotification n)
         {
-            // SellerId 已经包含在事件对象里
+            //SellerId is already included in the event object
             if (n.SellerId <= 0) return Task.CompletedTask;
             return GetSeller(n.SellerId).ProcessShipmentNotification(n);
         }
@@ -32,7 +30,7 @@ namespace OnlineMarket.OrleansImpl.Infra.Adapter
         
         public async Task NotifyInvoiceAsync(InvoiceIssued v)
         {
-            // items → 取 seller_id → 转成 Grain → 去重 → 逐个调用
+            // items → get seller_id → convert to Grain → remove duplicates → call one by one
             foreach (var g in v.items
                          .Select<OrderItem, ISellerActor>(i => GetSeller(i.seller_id))
                          .Distinct())

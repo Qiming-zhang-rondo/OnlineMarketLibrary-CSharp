@@ -21,7 +21,7 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
         public StockActorTest(NonTransactionalClusterFixture fx)
             : base(fx.Cluster) { }
 
-        /*───────────── 构造帮助方法 ─────────────*/
+        /*───────────── Help ─────────────*/
 
         private static StockItem NewItem(int sid,int pid,int qty = 100)
             => new()
@@ -92,9 +92,9 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
         public async Task AttemptReservation_OutOfStock()
         {
             var g = Grain(52, 102);
-            await g.SetItem(NewItem(52,102,2));           // 仅 2 件
+            await g.SetItem(NewItem(52,102,2));           // Only 2 
 
-            var st = await g.AttemptReservation(Cart(52,102,3));   // 要 3 件
+            var st = await g.AttemptReservation(Cart(52,102,3));   // Want 3
             Assert.Equal(ItemStatus.OUT_OF_STOCK, st);
 
             await g.Reset();

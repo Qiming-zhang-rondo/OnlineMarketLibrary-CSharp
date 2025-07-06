@@ -3,9 +3,8 @@ using OnlineMarket.Core.Common.Entities;
 
 namespace OnlineMarket.OrleansImpl.Infra.Adapter;
 
-/// <summary>
-/// Orleans MemoryStorage 内部保存的订单复合状态。
-/// </summary>
+
+// The composite state of the order is stored internally in Orleans MemoryStorage.
 public sealed class OrderGrainState
 {
     public Order                 Order   { get; set; } = default!;
@@ -13,7 +12,7 @@ public sealed class OrderGrainState
     public List<OrderHistory>    History { get; set; } = new();
 }
 
-/// <summary>简单自增计数器，替代旧的 NextOrderIdState。</summary>
+//Simple self-increment counter, replacing the old NextOrderIdState
 public sealed class OrderIdCounter
 {
     public int Value { get; set; }

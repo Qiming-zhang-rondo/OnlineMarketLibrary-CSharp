@@ -39,7 +39,7 @@ public sealed class CartActor : Grain, ICartActor
         return Task.CompletedTask;
     }
 
-    /*── ICartActor 接口全部转调 ──────────*/
+    /*── ICartActor Interface ──────────*/
     public Task AddItem(CartItem i)                   => _svc.AddItemAsync(i);
     public Task<List<CartItem>> GetItems()            => _svc.GetItemsAsync().ContinueWith(t=>t.Result.ToList());
     public Task NotifyCheckout(CustomerCheckout cc)   => _svc.NotifyCheckoutAsync(cc);

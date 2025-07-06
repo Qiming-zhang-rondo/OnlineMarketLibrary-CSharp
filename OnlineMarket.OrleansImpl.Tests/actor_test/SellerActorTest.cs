@@ -23,7 +23,7 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
         public SellerActorTest(NonTransactionalClusterFixture fx)
             : base(fx.Cluster) { }
         
-        // // 每个测试用例（包括每个 Theory 参数）前都会跑一次
+        // // Each test case (including each Theory parameter) will be run once before the test.
         // public async Task InitializeAsync()
         // {
         //     var siloHandle = _cluster.Silos.First();
@@ -35,8 +35,7 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
         //
         // public Task DisposeAsync() => Task.CompletedTask;
         
-
-        /*─────────────── 帮助方法 ───────────────*/
+        
 
         private static InvoiceIssued BuildInvoice(int cid, int oid, int sid)
         {
@@ -68,7 +67,7 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
                                                           ShipmentStatus st) =>
             new(cid, oid, DateTime.UtcNow, Guid.NewGuid().ToString(), st, sid);
 
-        /*────────────────── 测 试 ─────────────────*/
+        /*────────────────── Test ─────────────────*/
 
         [Fact]
         public async Task SetSeller_And_GetSeller()
@@ -105,27 +104,27 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
             int sid = 52, cid = 2, oid = 1002;
             var g = _cluster.GrainFactory.GetGrain<ISellerActor>(sid);
         
-            // 先模拟新发票
+            // Simulate a new invoice first
             await g.ProcessNewInvoice(BuildInvoice(cid, oid, sid));
             
             
-            // 构造一个 CustomerCheckout 对象（这里只是示例，你按实际属性填）
+            // Construct a CustomerCheckout object (this is just an example, you fill in the actual properties)
             var customer = new CustomerCheckout
             {
                 CustomerId = cid,
-                // …如果有其它必要字段也一并赋值…
+                
             };
         
-            // 再模拟“支付已确认”事件
+            // Simulate the "Payment Confirmed" event again
             await g.ProcessPaymentConfirmed(new PaymentConfirmed(
                 customer   : customer,
-                orderId    : oid,                       // ← 具名，绝不混淆
+                orderId    : oid,                      
                 totalAmount: 123.45f,
                 items      : new List<OrderItem>(),
                 date       : DateTime.UtcNow,
                 instanceId : Guid.NewGuid().ToString()));
         
-            // 最后拿到 Dashboard，检查 order_status
+            // Finally, get the Dashboard and check the order_status
             var dash = await g.QueryDashboard();
             Assert.All(dash.OrderEntries,
                 e => Assert.Equal(OrderStatus.PAYMENT_PROCESSED, e.order_status));
@@ -139,22 +138,21 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
             int sid = 53, cid = 3, oid = 1003;
             var g = _cluster.GrainFactory.GetGrain<ISellerActor>(sid);
         
-            // 先创建发票缓存
+            // First, create the invoice cache
             await g.ProcessNewInvoice(BuildInvoice(cid, oid, sid));
         
-            // 构造一个最小的 CustomerCheckout，只需设置 CustomerId
+            // To construct the smallest CustomerCheckout, simply set the CustomerId
             var customer = new CustomerCheckout { CustomerId = cid };
-        
-            // 构造一个空的 OrderItem 列表（你的逻辑里没用到它们）
+            
             var items = new List<OrderItem>();
         
-            // 构造事件：第一个参数是 status 字符串
+            // Construct the event: The first parameter is the status string
             var evt = new PaymentFailed(
-                status: "insufficient_funds",    // 直接用字符串
+                status: "insufficient_funds",    
                 customer: customer,
                 orderId: oid,
                 items: items,
-                totalAmount: 0f,                 // 测试里无需用到实际金额
+                totalAmount: 0f,                 
                 instanceId: Guid.NewGuid().ToString()
             );
         
@@ -197,7 +195,7 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test
             await g.ProcessShipmentNotification(BuildShipment(cid, oid, sid, ShipmentStatus.concluded));
             await Task.Delay(1000);
             var dash3 = await g.QueryDashboard();
-            Assert.Empty(dash3.OrderEntries);     // 已被删除
+            Assert.Empty(dash3.OrderEntries);     // Delete
             
             // await g.Reset();
             

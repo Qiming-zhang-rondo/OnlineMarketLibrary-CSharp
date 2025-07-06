@@ -1,8 +1,8 @@
-﻿namespace OnlineMarket.Core.Ports;
-
-// Ports/IPartitioner.cs
-public interface IPartitioner
-{
-    //给定一个 customerId，算出它应该发送到哪个 ShipmentActor 分区
-    int ResolvePartition(int customerId);
-}
+﻿// namespace OnlineMarket.Core.Ports;
+//
+// // Ports/IPartitioner.cs
+// public interface IPartitioner
+// {
+//     //Given a customerId, figure out which ShipmentActor partition it should be sent to
+//     int ResolvePartition(int customerId);
+// }

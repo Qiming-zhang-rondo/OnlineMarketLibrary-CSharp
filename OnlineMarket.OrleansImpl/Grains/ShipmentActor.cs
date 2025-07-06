@@ -53,7 +53,7 @@ public sealed class ShipmentActor : Grain, IShipmentActor
         return Task.CompletedTask;
     }
 
-    /*── IShipmentActor 接口：全部委托给 _svc ──*/
+    /*── IShipmentActor Interface ──*/
     public Task ProcessShipment(PaymentConfirmed e)                => _svc.ProcessShipment(e);
     public Task UpdateShipment(string tid)                         => _svc.UpdateShipment(tid);
     public Task UpdateShipment(string tid, ISet<(int,int,int)> s)  => _svc.UpdateShipment(tid, s);

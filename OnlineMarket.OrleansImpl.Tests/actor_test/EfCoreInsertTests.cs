@@ -14,8 +14,8 @@ public class EfCoreInsertTests
 
     public EfCoreInsertTests()
     {
-        // 这里直接构造一个 ServiceProvider，仅示意。  
-        // 你实际项目里可能从 TestCluster.ServiceProvider 拿。
+        // Here we construct a ServiceProvider directly, just for illustration.
+        // In your actual project, you may get it from TestCluster.ServiceProvider.
         var cfg = new AppConfig { AdoNetConnectionString = "Host=localhost;Port=5432;Database=online_test;Username=online;Password=online" };
 
         var services = new ServiceCollection();
@@ -32,7 +32,7 @@ public class EfCoreInsertTests
     [Fact]
     public async Task DirectAddAndSave_InsertsOrderEntry()
     {
-        // Arrange: 创建并重建数据库
+        // Arrange: Create and rebuild the database
         var factory = _services.GetRequiredService<IDbContextFactory<SellerDbContext>>();
         await using var ctx = await factory.CreateDbContextAsync();
         ctx.Database.EnsureDeleted();
@@ -58,11 +58,11 @@ public class EfCoreInsertTests
             delivery_status  = PackageStatus.created
         };
 
-        // Act: 直接添加并保存
+        // Act: Add and save directly
         await ctx.OrderEntries.AddAsync(entry);
         await ctx.SaveChangesAsync();
 
-        // Assert: 确认数据库中只有这条记录
+        // Assert: Confirm that there is only this record in the database
         var all = await ctx.OrderEntries
             .Where(e => e.seller_id == 7001 && e.order_id == 9101)
             .ToListAsync();

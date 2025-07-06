@@ -46,7 +46,7 @@ public sealed class CausalCartActor : Grain, ICausalCartActor
         return Task.CompletedTask;
     }
 
-    /*── ICausalCartActor 接口转调 ────────*/
+    /*── ICausalCartActor Interface ────────*/
     public Task<Cart> GetCart()                       => _svc.GetCartAsync();
     public Task<List<CartItem>> GetItems()            => _svc.GetItemsAsync().ContinueWith(t => t.Result.ToList());
     public Task AddItem(CartItem i)                   => _svc.AddItemAsync(i);

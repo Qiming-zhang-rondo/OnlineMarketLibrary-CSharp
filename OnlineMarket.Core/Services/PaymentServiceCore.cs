@@ -43,18 +43,18 @@ namespace OnlineMarket.Core.Services
 
         public async Task ProcessPaymentAsync(InvoiceIssued inv)
         {
-            // ① 资金流水（此处仅生成 Domain 对象，不落库）
+            // ① Fund flow (only Domain object is generated here, not stored in the database)
             var payTime = _clock.UtcNow;
             var evtWithItems = new PaymentConfirmed(
                     inv.customer, inv.orderId, inv.totalInvoice,
                     inv.items, payTime, inv.instanceId);
 
-            // ② 更新库存：并行执行
+            // ② Update inventory: parallel execution
             var stockTasks = inv.items.Select(i =>
                     _stock.ConfirmAsync(i.seller_id, i.product_id, i.quantity));
             await Task.WhenAll(stockTasks);
 
-            // ③ 向各个参与者发布事件
+            // ③ Publish events to each participant
             var tasks = new List<Task>
             {
                 _sellerNtfy.NotifyInvoiceAsync(inv),
@@ -65,7 +65,8 @@ namespace OnlineMarket.Core.Services
 
             await Task.WhenAll(tasks);
 
-            // ④ 触发发货流程（使用同一个事件，Shipment 会挑 sellerId 决定路由）
+            // ④ Trigger the shipping process
+            // (using the same event, Shipment will select sellerId to determine the route)
             await _ship.StartShipmentAsync(evtWithItems);
         }
     }

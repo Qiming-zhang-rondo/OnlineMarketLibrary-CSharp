@@ -38,7 +38,7 @@ namespace OnlineMarket.Core.Services
             };
         }
 
-        /*────────────── IStockService 实现 ──────────────*/
+        /*────────────── IStockService  ──────────────*/
 
         public async Task SetItem(StockItem item)
         {
@@ -103,7 +103,7 @@ namespace OnlineMarket.Core.Services
             await _repo.SaveAsync(_item);
         }
 
-        /*──────────────── 私有 ────────────────*/
+        /*──────────────── Private ────────────────*/
         private void CopyFrom(StockItem src)
         {
             _item.qty_available = src.qty_available;

@@ -47,7 +47,7 @@ public sealed class EventualCartActor : Grain, IEventualCartActor
         return Task.CompletedTask;
     }
 
-    /*──── IEventualCartActor 全部转调 ────*/
+    /*──── IEventualCartActor Interface conversion ────*/
     public Task<Cart> GetCart() => _svc.GetCartAsync();
     public Task<List<CartItem>> GetItems()
         => _svc.GetItemsAsync().ContinueWith(t=>t.Result.ToList());
@@ -57,7 +57,7 @@ public sealed class EventualCartActor : Grain, IEventualCartActor
     public Task<List<CartItem>> GetHistory(string id)
         => _svc.GetHistoryAsync(id).ContinueWith(t=>t.Result.ToList());
 
-    /* 额外调试接口：拿缓存里的最新 Product */
+    /* Additional debugging interface: Get the latest Product in the cache */
     public Task<Product?> GetReplicaItem(int sid,int pid)
         => Task.FromResult(_svc.TryGetReplica(sid,pid));
 }

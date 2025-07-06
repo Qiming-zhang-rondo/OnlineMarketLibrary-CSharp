@@ -27,7 +27,7 @@ public class ShipmentActorTest : BaseTest
         _out = output;
     }
 
-    /*─────────────── 构造测试事件 ───────────────*/
+    /*─────────────── Help ───────────────*/
     
     private static CustomerCheckout Customer(int cid) =>
         new()
@@ -57,7 +57,7 @@ public class ShipmentActorTest : BaseTest
 
     private static ReserveStock Reserve(int cid, int oid, int sid)
     {
-        // 只有 CartItem 列表才用集合初始器；CartItem 本身用对象初始器
+        // Only the CartItem list uses the collection initializer; CartItem itself uses an object initializer
         var ci = Cart(sid, 99);
         return new ReserveStock(
             DateTime.UtcNow,
@@ -68,7 +68,7 @@ public class ShipmentActorTest : BaseTest
 
     private static PaymentConfirmed Payment(int cid, int oid, int sid)
     {
-        var oi = new OrderItem          // ← OrderItem 也用对象初始器
+        var oi = new OrderItem         
         {
             order_id      = oid,
             seller_id     = sid,
@@ -109,7 +109,7 @@ public class ShipmentActorTest : BaseTest
     //         Items(sid), DateTime.UtcNow,
     //         Guid.NewGuid().ToString());
 
-    /*─────────────── 1. 创建快递记录 ───────────────*/
+    /*─────────────── 1. Create Shipment Record ───────────────*/
     [Fact]
     public async Task ProcessShipment_Should_Create_Record()
     {
@@ -118,23 +118,23 @@ public class ShipmentActorTest : BaseTest
         // int oid = 90001;         // orderId
         int sid = 77;            // sellerId
 
-        // /*── 1. 先真正生成订单 ─────────────────*/
+        // /*── 1. Create order ─────────────────*/
         var orderGrain = _cluster.GrainFactory.GetGrain<IOrderActor>(cid);
         await orderGrain.Checkout (Reserve(cid, 0, sid));
-        await Task.Delay(50);    // 给 OrderActor 写状态一点时间
+        await Task.Delay(50);    
         
         var created = (await orderGrain.GetOrders()).Single();
         int oid = created.id;
 
-        /*── 2. 再测试 ShipmentActor ────────────*/
+        /*── 2. Test ShipmentActor ────────────*/
         var g = _cluster.GrainFactory.GetGrain<IShipmentActor>(shipActorId);
         await g.ProcessShipment(Payment(cid, oid, sid));
         await Task.Delay(40);    // 同样缓冲一下持久化
 
-        /*── 3. 断言 ───────────────────────────*/
+        /*── 3. Assert ───────────────────────────*/
         var list = await g.GetShipments(cid);
         
-        // ### 把整个 List 序列化成 JSON 打印出来
+        // ### Print List in JSON
         var json = System.Text.Json.JsonSerializer.Serialize(
             list[0],
             new System.Text.Json.JsonSerializerOptions { WriteIndented = true }
@@ -147,20 +147,20 @@ public class ShipmentActorTest : BaseTest
 
         var ship = list[0];
         Assert.Equal(ShipmentStatus.approved, ship.status);
-        Assert.Equal(1, ship.package_count);    // 与 CartItem 数量一致
+        Assert.Equal(1, ship.package_count);    // Same as the number of CartItem
 
-        await g.Reset();   // 清理状态，避免并行测试串档
+        await g.Reset();   
     }
 
-    /*─────────────── 2. 更新 → 全部送达并删除 ───────────────*/
+    /*─────────────── 2. Update → All delivered and deleted ───────────────*/
     [Fact]
     public async Task UpdateShipment_Should_Deliver_And_Delete()
     {
         int actorId = 8002, cid = 2, sid = 78;
         
-        /* ① 先用 OrderActor 真正下单，拿到 orderId */
+        /* ① OrderActor order，get orderId */
         var orderGrain = _cluster.GrainFactory.GetGrain<IOrderActor>(cid);
-        await orderGrain.Checkout(Reserve(cid, 0, sid));          // 0 只是占位
+        await orderGrain.Checkout(Reserve(cid, 0, sid));          
         var created = (await orderGrain.GetOrders()).Single();
         int oid = created.id;     
         
@@ -173,20 +173,20 @@ public class ShipmentActorTest : BaseTest
         await Task.Delay(40);
 
         var listAfter = await g.GetShipments(cid);
-        Assert.Empty(listAfter);   // 已被 DoUpdate 删除
+        Assert.Empty(listAfter);   // Delete
 
         await g.Reset();
     }
 
-    /*─────────────── 3. Reset 清空状态 ───────────────*/
+    /*─────────────── 3. Reset───────────────*/
     [Fact]
     public async Task Reset_Should_Wipe_State()
     {
         int actorId = 8003, cid = 3, sid = 79;
         
-        /* ① 先用 OrderActor 真正下单，拿到 orderId */
+        /* ① OrderActor order，get orderId  */
         var orderGrain = _cluster.GrainFactory.GetGrain<IOrderActor>(cid);
-        await orderGrain.Checkout(Reserve(cid, 0, sid));          // 0 只是占位
+        await orderGrain.Checkout(Reserve(cid, 0, sid));          
         var created = (await orderGrain.GetOrders()).Single();
         int oid = created.id; 
         

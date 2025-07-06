@@ -32,7 +32,7 @@ public sealed class ShipmentServiceCore : IShipmentService
         _log        = log;
     }
 
-    /*──────────── IShipmentService 实现 ───────────*/
+    /*──────────── IShipmentService ───────────*/
 
     public async Task ProcessShipment(PaymentConfirmed pc)
     {
@@ -64,8 +64,8 @@ public sealed class ShipmentServiceCore : IShipmentService
                                           now, pc.instanceId, ShipmentStatus.approved, sellerId: 0);
         
         
-        //根据原代码逻辑和seller相关 修改ShipmentNotification
-        // 通知所有卖家
+        //Modify ShipmentNotification according to the original code logic and seller related
+        //Notify all sellers
         foreach (var sellerId in packages.Select(p => p.seller_id).Distinct())
             await _sellerNtfy.NotifyShipment(sn with { SellerId = sellerId });
 
@@ -74,7 +74,6 @@ public sealed class ShipmentServiceCore : IShipmentService
 
     public async Task UpdateShipment(string tid)
     {
-        // 逻辑与原 Actor 完全相同，只是把状态读写改为 repository 调用
         var oldest = await _repo.OldestOpenPerSellerAsync(10);
         await DoUpdate(oldest, tid);
     }
@@ -87,7 +86,7 @@ public sealed class ShipmentServiceCore : IShipmentService
 
     public Task Reset() => _repo.ResetAsync();
 
-    /*──────────── 私有辅助 ───────────*/
+    /*──────────── Private ───────────*/
     private List<Package> BuildPackages(int shipmentId, int customerId, IReadOnlyCollection<OrderItem> items, DateTime now)
     {
         int idx = 1;
@@ -145,8 +144,7 @@ public sealed class ShipmentServiceCore : IShipmentService
                 await _orderNtfy.NotifyShipment(
                     new ShipmentNotification(ship.customer_id, ship.order_id,
                                              now, tid, ship.status, sellerId: 0));
-
-                // 审计日志
+                
                 // await _audit.WriteAsync("ShipmentActor",
                 //          $"{ship.customer_id}-{ship.order_id}",
                 //          JsonSerializer.Serialize(new { ship, pkgs }));

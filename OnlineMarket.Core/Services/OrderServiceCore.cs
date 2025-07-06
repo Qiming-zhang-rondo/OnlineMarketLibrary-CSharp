@@ -32,19 +32,19 @@ public sealed class OrderServiceCore : IOrderService
         _clock      = clock;  _log = log;
     }
 
-    /*──────── IOrderService 实现 ────────*/
+    /*──────── IOrderService  ────────*/
 
     public async Task Checkout(ReserveStock rs)
     {
         var now = _clock.UtcNow;
 
-        /* 1) 同步库存网关 ─────*/
+        /* 1) Synchronize inventory gateway ─────*/
         var inStock = new List<CartItem>();
         foreach (var c in rs.items)
             if (await _stock.TryReserveAsync(c) == ItemStatus.IN_STOCK)
                 inStock.Add(c);
 
-        /* 2) 生成 Order / Items / History */
+        /* 2) Generate Order / Items / History */
         int id   = await _repo.GetNextIdAsync();
         var num  = $"{_customerId}-{now:yyyyMMdd}-{id}";
         BuildOrder(id, num, now, inStock,
@@ -53,7 +53,7 @@ public sealed class OrderServiceCore : IOrderService
 
         await _repo.SaveAsync(id, order, items, hist);
 
-        /* 3) 通知卖家 + 支付 */
+        /* 3) Notify seller + pay */
         var invoice = new InvoiceIssued(rs.customerCheckout, id, num,
                                         now, order.total_invoice, items,
                                         rs.instanceId);
@@ -86,14 +86,14 @@ public sealed class OrderServiceCore : IOrderService
     public Task<int>        GetNumOrders() => _repo.CountAsync();
     public Task Reset()                    => _repo.ResetAsync(_customerId);
 
-    /*──────── 私有辅助 ────────*/
+    /*──────── Private assistance ────────*/
     private static void BuildOrder(int id, string invoiceNum, DateTime now,
                                IReadOnlyList<CartItem> itemsInStock,
                                out Order order,
                                out List<OrderItem> items,
                                out List<OrderHistory> hist)
 {
-    /*── 1) 汇总金额 ───────────────────────*/
+    /*── 1) Total amount ──────────────────────────*/
     float freight = itemsInStock.Sum(i => i.FreightValue);
     float gross   = itemsInStock.Sum(i => i.UnitPrice * i.Quantity);
 
@@ -103,11 +103,11 @@ public sealed class OrderServiceCore : IOrderService
     float net       = gross - incentive;
     float totalInv  = net + freight;
 
-    /*── 2) Order 记录 ─────────────────────*/
+    /*── 2)Order Record ─────────────────────*/
     order = new Order
     {
         id               = id,
-        customer_id      = 0,               // 调用者稍后再填
+        customer_id      = 0,               
         invoice_number   = invoiceNum,
         status           = OrderStatus.INVOICED,
         purchase_date    = now,
@@ -121,7 +121,7 @@ public sealed class OrderServiceCore : IOrderService
         updated_at       = now
     };
 
-    /*── 3) OrderItem 列表 ─────────────────*/
+    /*── 3) OrderItem List ─────────────────*/
     items = new();
     int itemId = 1;
     foreach (var c in itemsInStock)
@@ -147,7 +147,7 @@ public sealed class OrderServiceCore : IOrderService
         });
     }
 
-    /*── 4) 初始历史 ───────────────────────*/
+    /*── 4) Initial History ───────────────────────*/
     hist = new()
     {
         new OrderHistory

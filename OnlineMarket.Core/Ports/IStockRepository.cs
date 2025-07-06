@@ -7,5 +7,3 @@ namespace OnlineMarket.Core.Ports
         Task SaveAsync(StockItem item);
     }
 }
-
-// 可复用之前的 IClock（若要可测试时钟）。

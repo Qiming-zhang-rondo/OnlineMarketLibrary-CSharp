@@ -16,7 +16,7 @@ public sealed class CartServiceCore : ICartService
     private readonly IClock          _clock;
     private readonly ILogger         _log;
 
-    private Cart _cart;                                     // 当前快照
+    private Cart _cart;                                     
     private readonly Dictionary<string,List<CartItem>> _hist = new();
 
     public CartServiceCore(int customerId,
@@ -32,13 +32,12 @@ public sealed class CartServiceCore : ICartService
         _clock        = clock;
         _log          = log;
         _trackHistory = trackHistory;
-
-        // 初始化快照（若仓库中没有则新建）
+        
         _cart = repo.LoadAsync(customerId).GetAwaiter().GetResult()
               ?? new Cart(customerId);
     }
 
-    /*──────── ICartService 实现 ────────*/
+    /*──────── ICartService implementation ────────*/
 
     public Task<Cart> GetCartAsync()   => Task.FromResult(_cart);
     public Task<IReadOnlyList<CartItem>> GetItemsAsync() => 
@@ -64,7 +63,7 @@ public sealed class CartServiceCore : ICartService
         if (_trackHistory)
             _hist.TryAdd(cc.instanceId, new(_cart.items));
 
-        await _order.CheckoutAsync(rs);        // 调用网关
+        await _order.CheckoutAsync(rs);        // Calling Gateway
         await SealAsync();
     }
 

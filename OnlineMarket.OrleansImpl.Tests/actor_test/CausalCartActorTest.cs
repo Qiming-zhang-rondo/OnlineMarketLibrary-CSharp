@@ -44,18 +44,18 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test;
         private static CustomerCheckout Cust(int cid,string tid) => new()
         {
             CustomerId  = cid,
-            instanceId  = tid,               // Cart 会把它当作历史 key
+            instanceId  = tid,               
             PaymentType = PaymentType.BOLETO.ToString()
         };
 
         [Fact]
         public async Task CausalCart_Checkout_Should_Refresh_Price_From_Replica()
         {
-            /* 参数 */
+           
             int cid = 4001, sid = 91, pid = 501;
             string ver = "1";
 
-            /* ① 取出同一个 In-Memory 副本网关，写入最新价格 120 */
+            /* ① Take out the same In-Memory replica gateway and write the latest price 120 */
             var replica = (InMemoryProductReplicaGateway)
                 _cluster.ServiceProvider.GetRequiredService<IProductReplicaGateway>();
 
@@ -65,7 +65,7 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test;
                 Version   = ver
             });
 
-            /* ② 其余逻辑保持你原来的套路 ----------------------- */
+            /* ② Keep the rest of the logic as you originally intended ----------------------- */
             var stock = _cluster.GrainFactory.GetGrain<IStockActor>(sid, pid.ToString());
             await stock.SetItem( Stock(sid, pid, ver) );
 
@@ -75,9 +75,9 @@ namespace OnlineMarket.OrleansImpl.Tests.actor_test;
             string tid = Guid.NewGuid().ToString();
             await cart.NotifyCheckout( Cust(cid, tid) );
 
-            await Task.Delay(500);                        // 等异步链收尾
+            await Task.Delay(500);                        
 
-            /* ③ 断言 —— 价格应被刷新为 10，折扣 110 */
+            /* ③ Assert —— The price should be refreshed to 20, with a discount of 80 */
             var hist = await cart.GetHistory(tid);
             var line = Assert.Single(hist);
             Assert.Equal(20, line.UnitPrice);

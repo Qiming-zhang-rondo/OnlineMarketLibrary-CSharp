@@ -37,7 +37,7 @@ public sealed class SellerServiceCore : ISellerService
         _logRecords = logRecords;
     }
 
-    /*──────── ISellerService 实现 ────────*/
+    /*──────── ISellerService────────*/
 
     public async Task SetSeller(Seller seller)
     {
@@ -170,7 +170,6 @@ public sealed class SellerServiceCore : ISellerService
         _entries.Clear();
         await _repo.ResetAsync(_sellerId);
     }
-
-    /*───────── 辅助 ─────────*/
+    
     private static string BuildKey(int cid, int oid) => $"{cid}-{oid}";
 }

@@ -36,7 +36,7 @@ public sealed class PaymentActor : Grain, IPaymentActor
         return Task.CompletedTask;
     }
 
-    /*──────── IPaymentActor 转调 ────────*/
+    /*──────── IPaymentActor Interface ────────*/
     public Task ProcessPayment(InvoiceIssued inv) =>
         _svc.ProcessPaymentAsync(inv);
 }

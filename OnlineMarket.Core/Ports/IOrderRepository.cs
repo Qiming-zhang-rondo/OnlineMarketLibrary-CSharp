@@ -16,6 +16,3 @@ public interface IOrderRepository
     Task<int>  CountAsync();
     Task ResetAsync(int customerId);
 }
-
-// 外部交互
-public interface IPaymentGateway{ Task StartPaymentAsync(InvoiceIssued v); }

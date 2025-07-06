@@ -43,7 +43,7 @@ public sealed class EventualCartServiceCore : ICartService
               ?? new Cart(customerId);
     }
 
-    /*──────── 订阅回调 ────────*/
+    /*──────── Subscription callback ────────*/
     private Task OnProductChanged(Product p)
     {
         _cache[(p.seller_id,p.product_id)] = p;
@@ -61,17 +61,17 @@ public sealed class EventualCartServiceCore : ICartService
         if(_cart.status==CartStatus.CHECKOUT_SENT)
             throw new InvalidOperationException("cart in checkout");
 
-        /* ① 订阅该商品更新 */
+        /* ① Subscribe to this product update */
         await _updates.SubscribeAsync(item.SellerId,item.ProductId,OnProductChanged);
 
-        /* ② 入篮并持久化 */
+        /* ② Enter the cart and persist */
         _cart.items.Add(item);
         await _repo.SaveAsync(_cart);
     }
 
     public async Task NotifyCheckoutAsync(CustomerCheckout cc)
     {
-        /* ① 用缓存刷新价格 */
+        /* ① Refresh the price with cache */
         foreach(var it in _cart.items)
         {
             if(!_cache.TryGetValue((it.SellerId,it.ProductId),out var p)) continue;
@@ -83,14 +83,14 @@ public sealed class EventualCartServiceCore : ICartService
             }
         }
 
-        /* ② 正常结账流程 */
+        /* ② Normal checkout process */
         _cart.status = CartStatus.CHECKOUT_SENT;
         if(_track) _hist.TryAdd(cc.instanceId,new(_cart.items));
         var rs = new ReserveStock(_clock.UtcNow,cc,_cart.items,cc.instanceId);
         await _order.CheckoutAsync(rs);
         await SealAsync();
 
-        /* ③ 结束后取消订阅 */
+        /*③ Cancel subscription after the end */
         await _updates.UnsubscribeAllAsync();
         _cache.Clear();
     }

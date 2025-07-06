@@ -7,32 +7,27 @@ using OnlineMarket.Core.Common.Entities;
 using OnlineMarket.Core.Common.Events;
 using OnlineMarket.Core.Common.Requests;
 using OnlineMarket.Core.Interfaces;
-using OnlineMarket.Core.Ports;          // ← 端口接口：在 Core 内部声明，Impl 中实现
+using OnlineMarket.Core.Ports;          
 using Microsoft.Extensions.Logging;
 
 namespace OnlineMarket.Core.Services
 {
-    /// <summary>
-    /// 商品领域服务核心实现（纯业务，无任何 Orleans/Redis 等技术耦合）。
-    /// </summary>
     public sealed class ProductServiceCore : IProductService
     {
-        // 依赖的“端口”（Ports）
-        private readonly IProductRepository     _repo;        // 持久化
-        private readonly IReplicationPublisher  _replicator;  // 消息流 / Redis 等复制
-        private readonly IStockNotifier         _stock;       // 库存通知
-        private readonly IClock                 _clock;       // 可测试时钟
+        // Ports
+        private readonly IProductRepository     _repo;        
+        private readonly IReplicationPublisher  _replicator;  
+        private readonly IStockNotifier         _stock;       
+        private readonly IClock                 _clock;       
         private readonly ILogger                _log;
 
-        /// <summary>商品当前快照；所有方法都直接修改它。</summary>
+        
         private readonly Product _product;
 
-        // 两个可选开关，如果 Impl 不需要可全部传 false
+        // Two optional switches, if Impl does not need them, all can be passed as false
         private readonly bool _enableStreamReplication;
         private readonly bool _enableSnapshot;
-
-        #region ▶ ctor
-
+        
         public ProductServiceCore(
             int sellerId,
             int productId,
@@ -61,11 +56,7 @@ namespace OnlineMarket.Core.Services
                 version    = "0"
             };
         }
-
-        #endregion
-
-        #region ▶ IProductService 实现
-
+        
         public async Task SetProduct(Product product)
         {
             if (product is null) throw new ArgumentNullException(nameof(product));
@@ -110,12 +101,8 @@ namespace OnlineMarket.Core.Services
             _product.version    = "0";
             _product.updated_at = _clock.UtcNow;
 
-            await PersistAndReplicate(publish: false); // 仅快照，不发消息
+            await PersistAndReplicate(publish: false); 
         }
-
-        #endregion
-
-        #region ▶ 私有辅助
 
         private void CopyFrom(Product src, bool keepCreatedAt)
         {
@@ -129,9 +116,8 @@ namespace OnlineMarket.Core.Services
                 _product.created_at = src.created_at;
         }
 
-        /// <summary>
-        /// 统一“写库 + 复制”管道；框架适配逻辑全部托管给 Impl 层。
-        /// </summary>
+        
+        // Unified "write + copy" pipeline
         private async Task PersistAndReplicate(bool publish = true)
         {
             await _repo.SaveAsync(_product);
@@ -150,7 +136,6 @@ namespace OnlineMarket.Core.Services
                 throw;
             }
         }
-
-        #endregion
+        
     }
 }

@@ -17,7 +17,7 @@ sealed class OrleansOrderRepository : IOrderRepository
         IPersistentState<OrderIdCounter> id)
     { _state = state; _id = id; }
 
-    /*──────── IOrderRepository 实现 ───────*/
+    /*──────── IOrderRepository  ───────*/
 
     public Task<int> GetNextIdAsync()
     {
@@ -53,7 +53,7 @@ sealed class OrleansOrderRepository : IOrderRepository
 
     public Task ResetAsync(int _) => DeleteAll();
 
-    /*──────── 私有 ───────*/
+    /*──────── Private ───────*/
     private Task DeleteAll()
     {
         _state.State.Clear();

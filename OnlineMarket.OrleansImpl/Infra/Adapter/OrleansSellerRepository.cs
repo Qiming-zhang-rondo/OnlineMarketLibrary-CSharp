@@ -38,14 +38,14 @@ public sealed class OrleansSellerRepository : ISellerRepository
     public async Task ResetAsync(int _)
     {
         
-        await _entries.ReadStateAsync();       // 先拉最新 ETag
-        // ① 不要 new 新字典，直接 Clear 保留引用 → ETag 不变
+        await _entries.ReadStateAsync();       // Pull the latest ETag first
+        // ① Do not create a new dictionary, just Clear the reference → ETag remains unchanged
         _entries.State.Clear();
 
-        // ② seller 也是同理，保留引用，仅置空字段或属性
+        // ② The same is true for seller, keep the reference and only set the field or attribute to empty
         _seller.State = null;
         
-        // ③ 写回存储
+        // ③ Write back to storage
         await Task.WhenAll(_entries.WriteStateAsync(),
             _seller.WriteStateAsync());
         // return Task.WhenAll(

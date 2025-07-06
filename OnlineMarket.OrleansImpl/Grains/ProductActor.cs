@@ -14,17 +14,12 @@ using Orleans.Runtime;
 
 namespace OnlineMarket.OrleansImpl.Grains
 {
-    /// <summary>
-    /// Orleans‐层的 ProductActor，只做“依赖组装 + 转调”。
-    /// </summary>
     public sealed class ProductActor : Grain, IProductActor
     {
-        // Orleans 持久化状态
         private readonly IPersistentState<Product> _state;
         private readonly ILogger<ProductServiceCore> _log;
         private readonly AppConfig _cfg;
-
-        // 核心业务服务
+        
         private ProductServiceCore _svc = null!;
 
         public ProductActor(
@@ -37,37 +32,30 @@ namespace OnlineMarket.OrleansImpl.Grains
             _cfg   = cfg;
         }
 
-        /*───────────────────────────── Grain 生命周期 ─────────────────────────────*/
+        /*───────────────────────────── Grain life cycle ─────────────────────────────*/
 
         public override Task OnActivateAsync(CancellationToken token)
         {
-            // 1) 提取主键：sellerId 存在 long 主键；productId 放在 string 扩展键
+            // Extract primary key: sellerId exists in long primary key;
+            // productId is placed in string extended key
             int sellerId   = (int)this.GetPrimaryKeyLong(out string productIdStr);
             int productId  = int.Parse(productIdStr);
-
-            // 2) 若首次激活且状态为空，初始化一个空 Product
+            
             if (_state.State is null || _state.State.product_id == 0)
                 _state.State = new Product { seller_id = sellerId, product_id = productId };
-
-            /* 3) 组装“端口”适配器 －－－－－－－－－－－－－－－－－－－－ */
-
-            // 3-1 持久化仓储（Orleans Storage）
+            
+            
             var repo = new OrleansProductRepository(_state);
-
-            // 3-2 复制通道
+            
             var replicator = ReplicationBuilder.Build(
                                 grain        : this,
                                 sellerId     : sellerId,
                                 productId    : productId,
                                 cfg          : _cfg);
-
-            // 3-3 库存通知
+            
             var stockNotifier = new StockGrainNotifier(this.GrainFactory);
-
-            // 3-4 时钟
-            var clock = SystemClock.Instance;   // 简单单例实现 IClock
-
-            /* 4) 实例化核心服务 －－－－－－－－－－－－－－－－－－－－－－ */
+            
+            var clock = SystemClock.Instance;  
 
             _svc = new ProductServiceCore(
                         sellerId,
@@ -83,7 +71,7 @@ namespace OnlineMarket.OrleansImpl.Grains
             return Task.CompletedTask;
         }
 
-        /*───────────────────────────── IProductActor 接口转调 ─────────────────────*/
+        /*───────────────────────────── IProductActor Interface ─────────────────────*/
 
         public Task SetProduct(Product p)                     => _svc.SetProduct(p);
         public Task ProcessProductUpdate(Product p)           => _svc.ProcessProductUpdate(p);

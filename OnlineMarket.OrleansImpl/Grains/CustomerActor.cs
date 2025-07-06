@@ -31,7 +31,7 @@ public sealed class CustomerActor : Grain, ICustomerActor
     {
         var repo = new OrleansCustomerRepository(_state);
         _svc     = new CustomerServiceCore(repo, _log);
-        await _svc.LoadAsync();            // 把 Orleans State 读进 Core
+        await _svc.LoadAsync();            //Read Orleans State into Core
     }
 
     /*──────── ICustomerActor → Core ────────*/

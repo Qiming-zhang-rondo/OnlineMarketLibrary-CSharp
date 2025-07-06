@@ -42,15 +42,13 @@ public sealed class StockActor : Grain, IStockActor
         int sellerId  = (int)this.GetPrimaryKeyLong(out var prodStr);
         int productId = int.Parse(prodStr);
 
-        //若首次激活，初始化 State
+        //If activated for the first time, initialize State
         if (_state.State is null || _state.State.product_id == 0)
             _state.State = new StockItem { seller_id = sellerId, product_id = productId };
-
-        //组装 “端口” 适配器
+        
         IStockRepository repo = new OrleansStockRepository(_state);
         IClock clock          = SystemClock.Instance;
-
-        //构造核心业务服务
+        
         _svc = new StockServiceCore(
                  sellerId, productId,
                  repo, clock, _log);
@@ -58,7 +56,7 @@ public sealed class StockActor : Grain, IStockActor
         return Task.CompletedTask;
     }
 
-    /*──────── IStockActor 接口全部转调 ────────*/
+    /*──────── IStockActor Interface ────────*/
     public Task SetItem(StockItem item)                     => _svc.SetItem(item);
     public Task<ItemStatus> AttemptReservation(CartItem c)  => _svc.AttemptReservation(c);
     public Task CancelReservation(int q)                    => _svc.CancelReservation(q);

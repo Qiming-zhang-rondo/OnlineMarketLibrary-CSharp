@@ -25,7 +25,7 @@ public class CustomerActorTest : BaseTest
         delivery_count        = 0
     };
 
-    /*────────── 1. 基本 CRUD ─────────*/
+    /*────────── 1. Basic CRUD ─────────*/
     [Fact]
     public async Task Set_And_Get()
     {
@@ -37,7 +37,7 @@ public class CustomerActorTest : BaseTest
         Assert.Equal("C-101", c.first_name);
     }
 
-    /*────────── 2. 通知统计 ─────────*/
+    /*────────── 2. Notification Statistics ─────────*/
     [Fact]
     public async Task Counters_Should_Increase()
     {
@@ -73,7 +73,7 @@ public class CustomerActorTest : BaseTest
         Assert.Equal(1, c.delivery_count);
     }
 
-    /*────────── 3. Clear 状态 ─────────*/
+    /*────────── 3. Clear State ─────────*/
     [Fact]
     public async Task Clear_Should_Wipe_All()
     {

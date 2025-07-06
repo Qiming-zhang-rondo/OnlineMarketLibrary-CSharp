@@ -9,7 +9,9 @@ using OnlineMarket.Core.Ports;
 
 public sealed class InMemoryProductReplicaGateway : IProductReplicaGateway
 {
-    //??? 两个实例共享同一内存 若不使用static 可以考虑手动构造一个共享实例，再注入到两个容器 在fixture
+    //The two instances share the same memory.
+    //If you do not use static, you can consider manually constructing a shared instance
+    //and injecting it into the two containers in the fixture.
     private static readonly ConcurrentDictionary<string, ProductReplica> _cache = new();
 
     public Task<ProductReplica?> GetReplicaAsync(int sellerId, int productId)
@@ -19,7 +21,7 @@ public sealed class InMemoryProductReplicaGateway : IProductReplicaGateway
         return Task.FromResult(pr);
     }
 
-    /* 方便测试：对外暴露写入接口 */
+    /* Convenient testing: expose the write interface externally */
     public void Seed(ProductReplica replica)
     {
         var key =replica.Key;

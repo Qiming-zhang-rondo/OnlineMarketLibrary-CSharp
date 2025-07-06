@@ -6,7 +6,7 @@ using OnlineMarket.Core.Common.Events;
 namespace OnlineMarket.OrleansImpl.Infra.Adapter;
 
 // Adapter/OrleansShipmentRepository.cs
-//新增NextShipmentIdState Entities
+//Add NextShipmentIdState Entities
 sealed class OrleansShipmentRepository : IShipmentRepository
 {
     private readonly IPersistentState<SortedDictionary<int,Shipment>> _ship;

@@ -24,13 +24,13 @@ public sealed class PaymentActorTest : BaseTest
 {
     private readonly ITestOutputHelper _out;
 
-    public PaymentActorTest(NonTransactionalClusterFixture f, ITestOutputHelper output     // ← xUnit 会自动帮你传这个进来
+    public PaymentActorTest(NonTransactionalClusterFixture f, ITestOutputHelper output     
     ) : base(f.Cluster)
     {
         _out = output;
     }
 
-    /*─────── 帮助构造器（与前面 Seller/Shipment 测试复用即可） ───────*/
+    /*─────── Helper constructor (reuse with previous Seller/Shipment test) ───────*/
     private static CustomerCheckout Cust(int id) => new()
     {
         CustomerId = id,
@@ -68,25 +68,17 @@ public sealed class PaymentActorTest : BaseTest
             12, new(){ item }, Guid.NewGuid().ToString());
     }
 
-    /*───────────── 1. Happy‑Path 集成验证 ─────────────*/
+    /*───────────── 1. Happy‑Path Integration Verification ─────────────*/
     [Fact]
     public async Task PaymentActor_FullWorkflow_Should_Create_Shipment()
     {
-        int cid = 21, sid = 88;          // 先别写死 oid
+        int cid = 21, sid = 88;          // Don't write oid yet
         var order = _cluster.GrainFactory.GetGrain<IOrderActor>(cid);
 
-        /* ① 结账 —— 生成订单 */
+        /* ① Checkout - Generate Order */
         await order.Checkout(RS(cid, /*oid 无所谓*/ 0, sid));
 
-        /* ② 取出真正的订单 ID（仓库自增值） */
-        // var created = (await order.GetOrders()).Single();
-        // int oid = created.id;            // ← 真实 ID
-
-        // /* ③ 构造发票 / 调用 PaymentActor */
-        // var pay = _cluster.GrainFactory.GetGrain<IPaymentActor>(cid);
-        // await pay.ProcessPayment(Invoice(cid, oid, sid));
-
-        /* ④ 验证已产生 Shipment 记录 */
+        /* ② Verify that a Shipment record has been generated */
         int shipActorId = Helper.GetShipmentActorId(
             cid,
             _cluster.ServiceProvider.GetRequiredService<AppConfig>()
@@ -97,7 +89,7 @@ public sealed class PaymentActorTest : BaseTest
 
         var list = await ship.GetShipments(cid);
         
-        // ### 把整个 List 序列化成 JSON 打印出来
+        // ### Serialize the entire List into JSON and print it out
         var json = System.Text.Json.JsonSerializer.Serialize(
             list,
             new System.Text.Json.JsonSerializerOptions { WriteIndented = true }
@@ -109,7 +101,7 @@ public sealed class PaymentActorTest : BaseTest
         Assert.Single(list);
         Assert.Equal(ShipmentStatus.approved, list[0].status);
 
-        /* ⑤ 清理 */
+        /* Reset */
         await ship.Reset();
         await order.Reset();
     }

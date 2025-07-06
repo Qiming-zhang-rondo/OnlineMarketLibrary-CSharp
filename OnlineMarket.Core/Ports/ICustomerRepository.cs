@@ -6,7 +6,8 @@ namespace OnlineMarket.Core.Ports;
 
 public interface ICustomerRepository
 {
-    Task SaveAsync(Customer c);           // Up‑sert
-    Task<Customer> LoadAsync();           // 永远返回非 null（第一次会建空对象）
+    Task SaveAsync(Customer c);         
+    //Always returns non-null (an empty object will be created the first time)
+    Task<Customer> LoadAsync();           
     Task ClearAsync();
 }

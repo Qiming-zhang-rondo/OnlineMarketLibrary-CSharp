@@ -16,13 +16,6 @@ using OnlineMarket.Core.Ports;
 
 namespace OnlineMarket.Core.Services;
 
-/// <summary>
-/// “卖家视图”核心业务：  
-/// 1. 把 <see cref="OrderEntry"/> 写入 Postgres；  
-/// 2. 增量维护 Seller‑Level 物化视图；  
-/// 3. 对外提供 <see cref="SellerDashboard"/> 查询。  
-/// <para>⚠️ 纯业务层：绝不出现 Orleans / EF / Dapper 等实现细节！</para>
-/// </summary>
 public sealed class SellerViewServiceCore : ISellerViewService
 {
     private readonly int _sellerId;
@@ -36,7 +29,7 @@ public sealed class SellerViewServiceCore : ISellerViewService
 
     private readonly bool _logRecords;
 
-    // 状态缓存（仅在本 Grain 生命周期内有效）
+    // State Cache (only valid during the lifecycle of this grain)
     private Seller? _seller;
     /// <summary>key = (customerId, orderId) → entryId 列表</summary>
     private IDictionary<(int,int), List<int>> _cache =
@@ -83,14 +76,12 @@ public sealed class SellerViewServiceCore : ISellerViewService
         
         var list = inv.items.Select(i => new OrderEntry
         {
-            // 基本索引字段
             customer_id  = inv.customer.CustomerId,
             order_id     = i.order_id,
             seller_id    = i.seller_id,
 
             natural_key  = $"{inv.customer.CustomerId}|{i.order_id}",
-
-            // 商品 / 金额
+            
             product_id   = i.product_id,
             product_name = i.product_name,
             quantity     = i.quantity,
@@ -101,14 +92,14 @@ public sealed class SellerViewServiceCore : ISellerViewService
             total_invoice= i.total_amount + i.freight_value,
             total_incentive = i.voucher,
 
-            // 初始状态
+            // Initial state
             order_status   = OrderStatus.INVOICED,
             delivery_status= PackageStatus.created
         }).ToList();
 
         await _repo.AddEntriesAsync(list);
 
-        // 记录到本地 cache：供后续 Shipment/Delivery 快速定位
+        // Record to cache: for quick location of subsequent shipment/delivery
         _cache[(inv.customer.CustomerId, inv.orderId)] =
             list.Select(e => e.id).ToList();
         // await _repo.SaveCacheAsync(_cache);
@@ -117,24 +108,23 @@ public sealed class SellerViewServiceCore : ISellerViewService
 
         Console.WriteLine($">>> Cache key={key}, ids={string.Join(",", ids)}");
         
-        // 如果你还保留旧的 repo 调用，也类似：
         await _repo.SaveCacheAsync(_cache);
         Console.WriteLine(">>> SaveCacheAsync(repo) returned");
 
         _dirty = true;                                  // 仪表盘需要刷新
     }
 
-    /*―――――――― 支付结果（在视图里不关心）――――――――*/
+    /*―――――――― Payment result (not relevant in the view)――――――――*/
     public Task ProcessPaymentConfirmed(PaymentConfirmed _) => Task.CompletedTask;
     public Task ProcessPaymentFailed   (PaymentFailed   _)  => Task.CompletedTask;
 
-    /*―――――――― Shipment 状态 ――――――――*/
+    /*―――――――― Shipment Status ――――――――*/
     public async Task ProcessShipmentNotification(ShipmentNotification sn)
     {
         var key = (sn.CustomerId, sn.OrderId);
         // Console.WriteLine($">>> Entering ProcessShipmentNotification for key={key}, status={sn.Status}");
         //
-        // // 先看下缓存里有没有
+        // 
         // Console.WriteLine($">>> Cache contains key? {_cache.ContainsKey(key)}");
         if (!_cache.TryGetValue(key, out var ids))
         {
@@ -143,7 +133,7 @@ public sealed class SellerViewServiceCore : ISellerViewService
         }
         // Console.WriteLine($">>> Cache hit, ids = [{string.Join(',', ids)}]");
 
-        // 1) finished：删除 + 审计
+        // 1) Finished: Delete + Audit
         if (sn.Status == ShipmentStatus.concluded)
         {
             Console.WriteLine(">>> Branch: concluded");
@@ -198,10 +188,10 @@ public sealed class SellerViewServiceCore : ISellerViewService
         _dirty = true;
     }
 
-    /*―――――――― Delivery 单包裹通知（本视图不存明细）――――――*/
+    /*―――――――― Delivery package（This view does not contain details）――――――*/
     public Task ProcessDeliveryNotification(DeliveryNotification _) => Task.CompletedTask;
 
-    /*―――――――― 仪表盘查询 ――――――――*/
+    /*―――――――― Dashboard query ――――――――*/
     public async Task<SellerDashboard> QueryDashboard()
     {
         if (!_dirty) return _cachedDashboard;

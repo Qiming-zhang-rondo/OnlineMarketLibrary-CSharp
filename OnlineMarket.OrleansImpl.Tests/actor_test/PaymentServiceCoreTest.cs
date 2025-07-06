@@ -40,7 +40,7 @@ public class PaymentServiceCoreTest
     [Fact]
     public async Task PaymentService_Should_Call_All_Ports()
     {
-        /*── Arrange : Mock 所有 Port ───────────────────*/
+        /*── Arrange : Mock All Port ───────────────────*/
         var stock    = new Mock<IStockGateway>();
         var sellerNt = new Mock<ISellerNotifier>();
         var orderNt  = new Mock<IOrderNotifier>();
@@ -64,14 +64,14 @@ public class PaymentServiceCoreTest
         /*── Act ───────────────────────────────────────*/
         await svc.ProcessPaymentAsync(inv);
 
-        /*── Assert : 逐条验证调用 ─────────────────────*/
-        // 1. 库存确认
+        /*── Assert  ─────────────────────*/
+        // 1. Stock confirmation
         stock.Verify(s => s.ConfirmAsync(inv.items[0].seller_id,
                                          inv.items[0].product_id,
                                          inv.items[0].quantity),
                      Times.Once);
 
-        // 2. Seller 收到 Invoice & PaymentConfirmed
+        // 2. Seller receives Invoice & PaymentConfirmed
         sellerNt.Verify(s => s.NotifyInvoiceAsync(inv), Times.Once);
         sellerNt.Verify(s => s.NotifyPaymentConfirmedAsync(
                             It.Is<PaymentConfirmed>(p => p.orderId == inv.orderId)),
@@ -83,13 +83,13 @@ public class PaymentServiceCoreTest
         custNt .Verify(c => c.NotifyPaymentAsync(
                            It.Is<PaymentConfirmed>(p=>p.orderId==inv.orderId)), Times.Once);
 
-        // 4. 发货流程启动
+        // 4. Shipping process starts
         shipGw.Verify(s => s.StartShipmentAsync(
                           It.Is<PaymentConfirmed>(p=>p.orderId==inv.orderId)), Times.Once);
     }
 }
 
-/*──── 简单 FakeClock ───*/
+/*──── FakeClock ───*/
 file sealed class FakeClock : IClock
 {
     public DateTime UtcNow => DateTime.UtcNow;

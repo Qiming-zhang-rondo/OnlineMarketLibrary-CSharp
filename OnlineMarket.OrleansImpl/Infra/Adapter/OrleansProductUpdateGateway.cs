@@ -20,7 +20,7 @@ public sealed class OrleansProductUpdateGateway : IProductUpdateGateway
         var stream = _provider.GetStream<Product>(
             Constants.ProductNameSpace, $"{sellerId}|{productId}");
 
-        /* 用带 StreamSequenceToken 的重载，再把 token 忽略掉即可 */
+        /* Use the overload with StreamSequenceToken and ignore the token */
         var handle = await stream.SubscribeAsync(
             (prod, _) => onChanged(prod));
 

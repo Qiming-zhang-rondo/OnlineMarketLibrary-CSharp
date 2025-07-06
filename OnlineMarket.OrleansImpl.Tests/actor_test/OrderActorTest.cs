@@ -14,7 +14,7 @@ public class OrderActorTest : BaseTest
 {
     public OrderActorTest(NonTransactionalClusterFixture f) : base(f.Cluster) { }
 
-    /*—— 构造 ReserveStock & CartItem ————*/
+    /*—— Construct ReserveStock & CartItem ————*/
     private static ReserveStock RS(int cid,int oid,int sid)
     {
         var cart = new CartItem{
@@ -34,7 +34,7 @@ public class OrderActorTest : BaseTest
         var g  = _cluster.GrainFactory.GetGrain<IOrderActor>(cid);
 
         await g.Checkout(RS(cid, 0, sid));
-        await Task.Delay(50);               // 给 Orleans Storage 一点时间
+        await Task.Delay(50);               
 
         var orders = await g.GetOrders();
         Assert.Single(orders);
@@ -43,13 +43,13 @@ public class OrderActorTest : BaseTest
 
         Assert.Equal(1, await g.GetNumOrders());
 
-        await g.Reset();                    // 清理，避免并行测试串档
+        await g.Reset();                    
     }
 
     [Fact]
     public async Task PaymentEvents_Should_Change_Order_Status()
     {
-        //同样地 oid是自增的 不能强制前期设定
+        //Similarly, oid is auto-incremental and cannot be forced to be set in advance
         int cid=2002, sid=89;
         var g  = _cluster.GrainFactory.GetGrain<IOrderActor>(cid);
         await g.Checkout(RS(cid, 0, sid));
@@ -58,7 +58,7 @@ public class OrderActorTest : BaseTest
         var created = (await g.GetOrders()).Single();
         int oid = created.id;
 
-        /*— 发一个 PaymentConfirmed —*/
+        /*—Send a PaymentConfirmed —*/
         await g.ProcessPaymentConfirmed(
             new PaymentConfirmed(new CustomerCheckout{CustomerId=cid},
                                  oid, 12, null, DateTime.UtcNow,

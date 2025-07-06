@@ -50,23 +50,22 @@ public sealed class SellerViewActor : Grain, ISellerViewActor
         //     db.Database.GetDbConnection().ConnectionString);
         
 
-        /* ① 用新的 DbContext 建&刷视图（如果已存在就跳过） */
+        /* ① Create & refresh the view with a new DbContext (skip if it already exists) */
         await using (var db = _dbFactory.CreateDbContext())
         {
             db.Database.EnsureCreated();
             
-            // 建视图：加 IF NOT EXISTS 保险起见
             string createSql   = SellerDbContext.CreateSellerViewSql(sid)
                 .Replace("CREATE MATERIALIZED VIEW",
                     "CREATE MATERIALIZED VIEW IF NOT EXISTS");
             await db.Database.ExecuteSqlRawAsync(createSql);
         
-            // 第一次也刷新一下，让视图里至少有空结果集
+            // Refresh the first time as well, so that there is at least an empty result set in the view
             await db.Database.ExecuteSqlRawAsync(
                 SellerDbContext.RefreshSellerViewSql(sid));
         }
         
-        // var db     = _dbFactory.CreateDbContext();     // 每个激活期一个 DbContext
+        // var db     = _dbFactory.CreateDbContext();     // One DbContext per activation
         var repo   = new OrleansSellerViewRepository(_cache, _dbFactory);
         var viewRf = new PostgresViewRefresher(_dbFactory);
 
@@ -80,7 +79,7 @@ public sealed class SellerViewActor : Grain, ISellerViewActor
         await Task.CompletedTask;
     }
 
-    /*—— 接口转调（与上同） ——*/
+    /*—— Interface ——*/
     public Task SetSeller(Seller s)                         => _svc.SetSeller(s);
     public Task<Seller?> GetSeller()                        => _svc.GetSeller();
     public Task ProcessNewInvoice(InvoiceIssued v)          => _svc.ProcessNewInvoice(v);
@@ -92,11 +91,11 @@ public sealed class SellerViewActor : Grain, ISellerViewActor
     //     }
     //     catch (PostgresException pgEx)
     //     {
-    //         // 1) 记录日志
-    //         _log.LogError(pgEx, "处理新发票时写数据库失败：{Message}", pgEx.Message);
-    //
-    //         // 2) 抛出 Orleans 可序列化的异常类型
-    //         throw new OrleansException($"数据库写入失败：{pgEx.Message}");
+    //         // 1) Log
+// _log.LogError(pgEx, "Failed to write to database when processing new invoice: {Message}", pgEx.Message);
+//
+// // 2) Throw Orleans serializable exception type
+// throw new OrleansException($"Failed to write to database: {pgEx.Message}");
     //     }
     // }
     public Task ProcessPaymentConfirmed(PaymentConfirmed v) => _svc.ProcessPaymentConfirmed(v);
@@ -110,26 +109,26 @@ public sealed class SellerViewActor : Grain, ISellerViewActor
     {
         try
         {
-            // 调用你的业务逻辑
+            // Call logic
             return await _svc.QueryDashboard();
         }
         catch (PostgresException pgEx)
         {
-            // 记录日志
-            _log.LogError(pgEx, "QueryDashboard 从 Postgres 读取视图失败：{Message}", pgEx.Message);
-            // 抛出 Orleans 友好的异常
-            throw new OrleansException($"数据库错误：{pgEx.Message}");
+            // log
+            _log.LogError(pgEx, "QueryDashboard fails to read view from Postgres：{Message}", pgEx.Message);
+            // Throw Orleans-friendly exceptions
+            throw new OrleansException($"Database Error：{pgEx.Message}");
         }
         catch (DbUpdateException dbEx)
         {
-            _log.LogError(dbEx, "QueryDashboard 更新数据库失败：{Message}", dbEx.Message);
-            throw new OrleansException($"数据更新错误：{dbEx.Message}");
+            _log.LogError(dbEx, "QueryDashboard failed to update the database：{Message}", dbEx.Message);
+            throw new OrleansException($"Data update error：{dbEx.Message}");
         }
         catch (Exception ex)
         {
-            // 捕获其它所有异常，防止任何“未知类型”走出 Grain
-            _log.LogError(ex, "QueryDashboard 遇到未知错误");
-            throw new OrleansException("内部错误，请查看服务器日志。");
+            // Catch all other exceptions to prevent any "unknown type" from escaping the grain
+            _log.LogError(ex, "QueryDashboard encountered an unknown error");
+            throw new OrleansException("Internal error, please check the server logs.");
         }
     }
     public Task Reset()                                     => _svc.Reset();

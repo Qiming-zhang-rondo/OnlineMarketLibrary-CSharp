@@ -18,7 +18,7 @@ public sealed class SellerDbContext : DbContext
 
     private readonly AppConfig _cfg;
 
-    /*──── 构造函数：EF / AddDbContextFactory 需要这个 ────*/
+    /*──── Constructor: EF / AddDbContextFactory needs this ────*/
     [ActivatorUtilitiesConstructor]
     public SellerDbContext(DbContextOptions<SellerDbContext> opts,
                            AppConfig cfg) : base(opts)
@@ -29,7 +29,7 @@ public sealed class SellerDbContext : DbContext
     /*────────────── OnConfiguring ──────────────*/
     // protected override void OnConfiguring(DbContextOptionsBuilder b)
     // {
-    //     /* 如果外面已经在 AddDbContextFactory 配过，就不重复配置 */
+    //     /* If AddDbContextFactory has already been configured externally, there is no need to configure it repeatedly. */
     //     if (!b.IsConfigured)
     //     {
     //         b.UseNpgsql(_cfg.AdoNetConnectionString)
@@ -59,7 +59,7 @@ public sealed class SellerDbContext : DbContext
                 .IsRequired(false);  // ← 允许为 NULL
         });
 
-        /*—— 物化视图（只映射，EF 不负责建） ——*/
+        /*—— Materialized views (only mapped, EF is not responsible for building) ——*/
         m.Entity<OrderSellerView>(e =>
         {
             e.HasNoKey();
@@ -67,9 +67,9 @@ public sealed class SellerDbContext : DbContext
         });
     }
 
-    /*────────────── 工具 SQL ──────────────*/
+    /*────────────── SQL ──────────────*/
 
-    // 建/重建单卖家的物化视图 —— 一条 SQL
+    // Create/rebuild a materialized view of a single seller - one SQL
     public static string CreateSellerViewSql(int sellerId) => $@"
 create materialized view if not exists public.order_seller_view_{sellerId} as
 select

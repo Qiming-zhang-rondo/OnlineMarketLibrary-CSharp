@@ -8,9 +8,8 @@ using OnlineMarket.Core.Common.Entities;
 
 namespace OnlineMarket.OrleansImpl.Infra.Adapter
 {
-    /// <summary>
-    /// 把通知转发给基于 Postgres 视图的 SellerViewActor。
-    /// </summary>
+    
+    // Forwards notifications to the SellerViewActor based on the Postgres view.
     public sealed class SellerViewGrainNotifier : ISellerNotifier
     {
         private readonly IGrainFactory _factory;
@@ -34,7 +33,7 @@ namespace OnlineMarket.OrleansImpl.Infra.Adapter
         
         public async Task NotifyInvoiceAsync(InvoiceIssued v)
         {
-            // items → 取 seller_id → 转成 Grain → 去重 → 逐个调用
+            // items → get seller_id → convert to Grain → remove duplicates → call one by one
             foreach (var g in v.items
                          .Select<OrderItem, ISellerActor>(i => GetSeller(i.seller_id))
                          .Distinct())

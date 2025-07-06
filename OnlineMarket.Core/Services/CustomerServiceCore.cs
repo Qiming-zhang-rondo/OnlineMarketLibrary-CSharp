@@ -18,7 +18,7 @@ public sealed class CustomerServiceCore : ICustomerService
     {
         _repo = repo  ?? throw new ArgumentNullException(nameof(repo));
         _log  = log   ?? throw new ArgumentNullException(nameof(log));
-        _customer = new();                // 确保字段已初始化
+        _customer = new();                // Make sure the fields are initialized
     }
 
     /*───── ICustomerService ─────*/
@@ -54,7 +54,6 @@ public sealed class CustomerServiceCore : ICustomerService
         _customer.delivery_count++;
         await _repo.SaveAsync(_customer);
     }
-
-    /*───── 生命周期 ─────*/
+    
     public async Task LoadAsync() => _customer = await _repo.LoadAsync();
 }
